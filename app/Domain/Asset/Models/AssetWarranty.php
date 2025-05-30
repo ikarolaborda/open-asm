@@ -77,7 +77,7 @@ class AssetWarranty extends Model
      */
     public function isCurrentlyActive(): bool
     {
-        return $this->is_active 
+        return $this->is_active
             && $this->start_date <= now()
             && $this->end_date >= now();
     }
@@ -96,6 +96,7 @@ class AssetWarranty extends Model
     public function isExpiringSoon(): bool
     {
         $daysUntilExpiry = now()->diffInDays($this->end_date, false);
+
         return $daysUntilExpiry >= 0 && $daysUntilExpiry <= 30;
     }
 
@@ -146,4 +147,4 @@ class AssetWarranty extends Model
     {
         return $query->where('end_date', '<', now());
     }
-} 
+}

@@ -89,9 +89,9 @@ class LocationController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'id',      type: 'string', format: 'uuid'),
-                                    new OA\Property(property: 'name',    type: 'string'),
-                                    new OA\Property(property: 'city',    type: 'string'),
+                                    new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name', type: 'string'),
+                                    new OA\Property(property: 'city', type: 'string'),
                                     new OA\Property(property: 'country', type: 'string'),
                                 ],
                                 type: 'object'
@@ -101,9 +101,9 @@ class LocationController extends Controller
                             property: 'meta',
                             properties: [
                                 new OA\Property(property: 'current_page', type: 'integer'),
-                                new OA\Property(property: 'last_page',    type: 'integer'),
-                                new OA\Property(property: 'per_page',     type: 'integer'),
-                                new OA\Property(property: 'total',        type: 'integer'),
+                                new OA\Property(property: 'last_page', type: 'integer'),
+                                new OA\Property(property: 'per_page', type: 'integer'),
+                                new OA\Property(property: 'total', type: 'integer'),
                             ],
                             type: 'object'
                         ),
@@ -238,7 +238,7 @@ class LocationController extends Controller
         $allowedIncludes = ['customer', 'assets'];
         $includes = array_intersect(explode(',', $includes), $allowedIncludes);
 
-        if (!empty($includes)) {
+        if (! empty($includes)) {
             $location->load($includes);
         }
 

@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Assets", description: "Asset management endpoints")]
+#[OA\Tag(name: 'Assets', description: 'Asset management endpoints')]
 class AssetController extends Controller
 {
     public function __construct(
@@ -26,46 +26,46 @@ class AssetController extends Controller
     ) {}
 
     #[OA\Get(
-        path: "/api/v1/assets",
-        summary: "Get paginated list of assets",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets',
+        summary: 'Get paginated list of assets',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", minimum: 1, maximum: 100, default: 15)
+                schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100, default: 15)
             ),
             new OA\Parameter(
-                name: "sort",
-                in: "query",
-                description: "Sort field (prefix with - for descending)",
+                name: 'sort',
+                in: 'query',
+                description: 'Sort field (prefix with - for descending)',
                 required: false,
-                schema: new OA\Schema(type: "string", default: "name")
+                schema: new OA\Schema(type: 'string', default: 'name')
             ),
             new OA\Parameter(
-                name: "filter[is_active]",
-                in: "query",
-                description: "Filter by active status",
+                name: 'filter[is_active]',
+                in: 'query',
+                description: 'Filter by active status',
                 required: false,
-                schema: new OA\Schema(type: "boolean")
+                schema: new OA\Schema(type: 'boolean')
             ),
             new OA\Parameter(
-                name: "filter[customer_id]",
-                in: "query",
-                description: "Filter by customer ID",
+                name: 'filter[customer_id]',
+                in: 'query',
+                description: 'Filter by customer ID',
                 required: false,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Successful response",
-                content: new OA\JsonContent(ref: "#/components/schemas/AssetCollection")
-            )
+                description: 'Successful response',
+                content: new OA\JsonContent(ref: '#/components/schemas/AssetCollection')
+            ),
         ]
     )]
     public function index(Request $request): AssetCollection
@@ -85,25 +85,25 @@ class AssetController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/assets",
-        summary: "Create a new asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets',
+        summary: 'Create a new asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: "#/components/schemas/CreateAssetRequest")
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateAssetRequest')
         ),
         responses: [
             new OA\Response(
                 response: 201,
-                description: "Asset created successfully",
+                description: 'Asset created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string"),
-                        new OA\Property(property: "data", ref: "#/components/schemas/AssetResource")
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/AssetResource'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function store(CreateAssetRequest $request): JsonResponse
@@ -133,25 +133,25 @@ class AssetController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/assets/{asset}",
-        summary: "Get a specific asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}',
+        summary: 'Get a specific asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Successful response",
-                content: new OA\JsonContent(ref: "#/components/schemas/AssetResource")
-            )
+                description: 'Successful response',
+                content: new OA\JsonContent(ref: '#/components/schemas/AssetResource')
+            ),
         ]
     )]
     public function show(Request $request, Asset $asset): AssetResource
@@ -169,34 +169,34 @@ class AssetController extends Controller
     }
 
     #[OA\Put(
-        path: "/api/v1/assets/{asset}",
-        summary: "Update an asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}',
+        summary: 'Update an asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: "#/components/schemas/UpdateAssetRequest")
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateAssetRequest')
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset updated successfully",
+                description: 'Asset updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string"),
-                        new OA\Property(property: "data", ref: "#/components/schemas/AssetResource")
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/AssetResource'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function update(UpdateAssetRequest $request, Asset $asset): JsonResponse
@@ -227,29 +227,29 @@ class AssetController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/v1/assets/{asset}",
-        summary: "Delete an asset (soft delete)",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}',
+        summary: 'Delete an asset (soft delete)',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset deleted successfully",
+                description: 'Asset deleted successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string")
+                        new OA\Property(property: 'message', type: 'string'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function destroy(Asset $asset): JsonResponse
@@ -277,24 +277,24 @@ class AssetController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/assets/{id}/restore",
-        summary: "Restore a soft-deleted asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{id}/restore',
+        summary: 'Restore a soft-deleted asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "id",
-                in: "path",
-                description: "Asset ID",
+                name: 'id',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset restored successfully"
-            )
+                description: 'Asset restored successfully'
+            ),
         ]
     )]
     public function restore(string $id): JsonResponse
@@ -323,24 +323,24 @@ class AssetController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/v1/assets/{id}/force",
-        summary: "Permanently delete an asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{id}/force',
+        summary: 'Permanently delete an asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "id",
-                in: "path",
-                description: "Asset ID",
+                name: 'id',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset permanently deleted"
-            )
+                description: 'Asset permanently deleted'
+            ),
         ]
     )]
     public function forceDestroy(string $id): JsonResponse
@@ -368,24 +368,24 @@ class AssetController extends Controller
     }
 
     #[OA\Patch(
-        path: "/api/v1/assets/{asset}/retire",
-        summary: "Retire an asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}/retire',
+        summary: 'Retire an asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset retired successfully"
-            )
+                description: 'Asset retired successfully'
+            ),
         ]
     )]
     public function retire(Asset $asset): JsonResponse
@@ -414,24 +414,24 @@ class AssetController extends Controller
     }
 
     #[OA\Patch(
-        path: "/api/v1/assets/{asset}/reactivate",
-        summary: "Reactivate a retired asset",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}/reactivate',
+        summary: 'Reactivate a retired asset',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset reactivated successfully"
-            )
+                description: 'Asset reactivated successfully'
+            ),
         ]
     )]
     public function reactivate(Asset $asset): JsonResponse
@@ -460,24 +460,24 @@ class AssetController extends Controller
     }
 
     #[OA\Patch(
-        path: "/api/v1/assets/{asset}/calculate-quality",
-        summary: "Calculate and update data quality score",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/{asset}/calculate-quality',
+        summary: 'Calculate and update data quality score',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "asset",
-                in: "path",
-                description: "Asset ID",
+                name: 'asset',
+                in: 'path',
+                description: 'Asset ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Data quality calculated successfully"
-            )
+                description: 'Data quality calculated successfully'
+            ),
         ]
     )]
     public function calculateDataQuality(Asset $asset): JsonResponse
@@ -506,24 +506,24 @@ class AssetController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/assets/warranty/expiring-soon",
-        summary: "Get assets with warranties expiring soon",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/warranty/expiring-soon',
+        summary: 'Get assets with warranties expiring soon',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", default: 15)
-            )
+                schema: new OA\Schema(type: 'integer', default: 15)
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Assets with expiring warranties"
-            )
+                description: 'Assets with expiring warranties'
+            ),
         ]
     )]
     public function warrantyExpiringSoon(Request $request): AssetCollection
@@ -540,24 +540,24 @@ class AssetController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/assets/warranty/expired",
-        summary: "Get assets with expired warranties",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/warranty/expired',
+        summary: 'Get assets with expired warranties',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", default: 15)
-            )
+                schema: new OA\Schema(type: 'integer', default: 15)
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Assets with expired warranties"
-            )
+                description: 'Assets with expired warranties'
+            ),
         ]
     )]
     public function warrantyExpired(Request $request): AssetCollection
@@ -574,35 +574,35 @@ class AssetController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/assets/statistics",
-        summary: "Get asset statistics",
-        tags: ["Assets"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/assets/statistics',
+        summary: 'Get asset statistics',
+        tags: ['Assets'],
+        security: [['bearerAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Asset statistics",
+                description: 'Asset statistics',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(
-                            property: "data",
-                            type: "object",
+                            property: 'data',
+                            type: 'object',
                             properties: [
-                                new OA\Property(property: "total_assets", type: "integer"),
-                                new OA\Property(property: "active_assets", type: "integer"),
-                                new OA\Property(property: "inactive_assets", type: "integer"),
-                                new OA\Property(property: "retired_assets", type: "integer"),
-                                new OA\Property(property: "assets_with_warranties", type: "integer"),
-                                new OA\Property(property: "expiring_warranties", type: "integer"),
-                                new OA\Property(property: "expired_warranties", type: "integer"),
-                                new OA\Property(property: "low_quality_assets", type: "integer"),
-                                new OA\Property(property: "average_quality_score", type: "number"),
-                                new OA\Property(property: "total_value", type: "number")
+                                new OA\Property(property: 'total_assets', type: 'integer'),
+                                new OA\Property(property: 'active_assets', type: 'integer'),
+                                new OA\Property(property: 'inactive_assets', type: 'integer'),
+                                new OA\Property(property: 'retired_assets', type: 'integer'),
+                                new OA\Property(property: 'assets_with_warranties', type: 'integer'),
+                                new OA\Property(property: 'expiring_warranties', type: 'integer'),
+                                new OA\Property(property: 'expired_warranties', type: 'integer'),
+                                new OA\Property(property: 'low_quality_assets', type: 'integer'),
+                                new OA\Property(property: 'average_quality_score', type: 'number'),
+                                new OA\Property(property: 'total_value', type: 'number'),
                             ]
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function statistics(): JsonResponse

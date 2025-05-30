@@ -16,8 +16,8 @@ class TenantService
     public function getCurrentOrganization(): ?Organization
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User || !$user->organization_id) {
+
+        if (! $user instanceof User || ! $user->organization_id) {
             return null;
         }
 
@@ -30,8 +30,8 @@ class TenantService
     public function getCurrentOrganizationId(): ?string
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User) {
+
+        if (! $user instanceof User) {
             return null;
         }
 
@@ -44,8 +44,8 @@ class TenantService
     public function hasAccessToOrganization(string $organizationId): bool
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User) {
+
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -55,7 +55,7 @@ class TenantService
         }
 
         $currentOrgId = $this->getCurrentOrganizationId();
-        
+
         return $currentOrgId && $currentOrgId === $organizationId;
     }
 
@@ -65,8 +65,8 @@ class TenantService
     public function belongsToCurrentOrganization(Model $model): bool
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User) {
+
+        if (! $user instanceof User) {
             return false;
         }
 
@@ -75,7 +75,7 @@ class TenantService
             return true;
         }
 
-        if (!property_exists($model, 'organization_id') && !$model->getAttribute('organization_id')) {
+        if (! property_exists($model, 'organization_id') && ! $model->getAttribute('organization_id')) {
             return false;
         }
 
@@ -90,7 +90,7 @@ class TenantService
      */
     public function ensureBelongsToCurrentOrganization(Model $model): void
     {
-        if (!$this->belongsToCurrentOrganization($model)) {
+        if (! $this->belongsToCurrentOrganization($model)) {
             throw new \Illuminate\Auth\Access\AuthorizationException(
                 'This resource does not belong to your organization.'
             );
@@ -103,8 +103,8 @@ class TenantService
     public function getCurrentOrganizationStatistics(): array
     {
         $organization = $this->getCurrentOrganization();
-        
-        if (!$organization) {
+
+        if (! $organization) {
             return [];
         }
 
@@ -117,7 +117,7 @@ class TenantService
     public function isCurrentOrganizationActive(): bool
     {
         $organization = $this->getCurrentOrganization();
-        
+
         return $organization && $organization->isActive();
     }
 
@@ -127,22 +127,23 @@ class TenantService
     public function setOrganizationId(Model $model): void
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User) {
+
+        if (! $user instanceof User) {
             return;
         }
 
         // For super admins, only set organization_id if not already set and user has an organization
         if ($user->isSuperAdmin()) {
-            if (!$model->getAttribute('organization_id') && $user->organization_id) {
+            if (! $model->getAttribute('organization_id') && $user->organization_id) {
                 $model->setAttribute('organization_id', $user->organization_id);
             }
+
             return;
         }
 
         $currentOrgId = $this->getCurrentOrganizationId();
-        
-        if ($currentOrgId && !$model->getAttribute('organization_id')) {
+
+        if ($currentOrgId && ! $model->getAttribute('organization_id')) {
             $model->setAttribute('organization_id', $currentOrgId);
         }
     }
@@ -153,7 +154,7 @@ class TenantService
     public function isSuperAdmin(): bool
     {
         $user = auth()->user();
-        
+
         return $user instanceof User && $user->isSuperAdmin();
     }
 
@@ -163,8 +164,8 @@ class TenantService
     public function getAccessibleOrganizations(): \Illuminate\Database\Eloquent\Collection
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User) {
+
+        if (! $user instanceof User) {
             return collect();
         }
 
@@ -187,13 +188,13 @@ class TenantService
     public function switchOrganizationContext(?string $organizationId): bool
     {
         $user = auth()->user();
-        
-        if (!$user instanceof User || !$user->isSuperAdmin()) {
+
+        if (! $user instanceof User || ! $user->isSuperAdmin()) {
             return false;
         }
 
         // Validate organization exists if provided
-        if ($organizationId && !Organization::find($organizationId)) {
+        if ($organizationId && ! Organization::find($organizationId)) {
             return false;
         }
 
@@ -201,4 +202,4 @@ class TenantService
         // For now, we'll just return true to indicate permission
         return true;
     }
-} 
+}

@@ -16,24 +16,24 @@ class CheckPermissionMiddleware
      */
     public function handle(Request $request, Closure $next, string $permission)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json([
                 'message' => 'Unauthenticated',
-                'error' => 'User must be authenticated to access this resource.'
+                'error' => 'User must be authenticated to access this resource.',
             ], 401);
         }
 
         $user = auth()->user();
 
-        if (!$user->can($permission)) {
+        if (! $user->can($permission)) {
             return response()->json([
                 'message' => 'Insufficient Permissions',
                 'error' => "You do not have permission to perform this action. Required permission: {$permission}",
                 'required_permission' => $permission,
-                'user_permissions' => $user->getAllPermissions()->pluck('name')->toArray()
+                'user_permissions' => $user->getAllPermissions()->pluck('name')->toArray(),
             ], 403);
         }
 
         return $next($request);
     }
-} 
+}

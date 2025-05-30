@@ -143,7 +143,7 @@ Route::middleware(['auth:api', 'ensure.organization'])->group(function () {
     // Product Management
     Route::apiResource('products', ProductController::class);
 
-    // Asset Type Management  
+    // Asset Type Management
     Route::apiResource('types', TypeController::class);
 
     // Tag Management

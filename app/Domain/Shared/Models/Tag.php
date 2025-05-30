@@ -52,7 +52,7 @@ class Tag extends Model
         });
 
         static::creating(function (Tag $tag) {
-            if (!$tag->organization_id && auth()->check()) {
+            if (! $tag->organization_id && auth()->check()) {
                 $tag->organization_id = auth()->user()->organization_id;
             }
         });
@@ -101,4 +101,4 @@ class Tag extends Model
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
-} 
+}

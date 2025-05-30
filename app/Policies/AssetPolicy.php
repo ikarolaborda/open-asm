@@ -25,7 +25,7 @@ class AssetPolicy
      */
     public function view(User $user, Asset $asset): bool
     {
-        return $user->can('view-assets') && 
+        return $user->can('view-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -42,7 +42,7 @@ class AssetPolicy
      */
     public function update(User $user, Asset $asset): bool
     {
-        return $user->can('edit-assets') && 
+        return $user->can('edit-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -51,7 +51,7 @@ class AssetPolicy
      */
     public function delete(User $user, Asset $asset): bool
     {
-        return $user->can('delete-assets') && 
+        return $user->can('delete-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -60,7 +60,7 @@ class AssetPolicy
      */
     public function restore(User $user, Asset $asset): bool
     {
-        return $user->can('delete-assets') && 
+        return $user->can('delete-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -69,8 +69,8 @@ class AssetPolicy
      */
     public function forceDelete(User $user, Asset $asset): bool
     {
-        return $user->hasRole('super-admin') && 
-               $user->can('delete-assets') && 
+        return $user->hasRole('super-admin') &&
+               $user->can('delete-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -79,7 +79,7 @@ class AssetPolicy
      */
     public function retire(User $user, Asset $asset): bool
     {
-        return $user->can('retire-assets') && 
+        return $user->can('retire-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -88,7 +88,7 @@ class AssetPolicy
      */
     public function reactivate(User $user, Asset $asset): bool
     {
-        return $user->can('reactivate-assets') && 
+        return $user->can('reactivate-assets') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -97,7 +97,7 @@ class AssetPolicy
      */
     public function manageWarranties(User $user, Asset $asset): bool
     {
-        return $user->can('manage-asset-warranties') && 
+        return $user->can('manage-asset-warranties') &&
                $user->organization_id === $asset->organization_id;
     }
 
@@ -116,4 +116,4 @@ class AssetPolicy
     {
         return $user->can('bulk-update-assets') || $user->can('delete-assets');
     }
-} 
+}

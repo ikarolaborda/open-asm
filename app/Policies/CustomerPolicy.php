@@ -25,7 +25,7 @@ class CustomerPolicy
      */
     public function view(User $user, Customer $customer): bool
     {
-        return $user->can('view-customers') && 
+        return $user->can('view-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -42,7 +42,7 @@ class CustomerPolicy
      */
     public function update(User $user, Customer $customer): bool
     {
-        return $user->can('edit-customers') && 
+        return $user->can('edit-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -51,7 +51,7 @@ class CustomerPolicy
      */
     public function delete(User $user, Customer $customer): bool
     {
-        return $user->can('delete-customers') && 
+        return $user->can('delete-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -60,7 +60,7 @@ class CustomerPolicy
      */
     public function restore(User $user, Customer $customer): bool
     {
-        return $user->can('delete-customers') && 
+        return $user->can('delete-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -69,8 +69,8 @@ class CustomerPolicy
      */
     public function forceDelete(User $user, Customer $customer): bool
     {
-        return $user->hasRole('super-admin') && 
-               $user->can('delete-customers') && 
+        return $user->hasRole('super-admin') &&
+               $user->can('delete-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -79,7 +79,7 @@ class CustomerPolicy
      */
     public function activate(User $user, Customer $customer): bool
     {
-        return $user->can('activate-customers') && 
+        return $user->can('activate-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -88,7 +88,7 @@ class CustomerPolicy
      */
     public function deactivate(User $user, Customer $customer): bool
     {
-        return $user->can('deactivate-customers') && 
+        return $user->can('deactivate-customers') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -105,8 +105,8 @@ class CustomerPolicy
      */
     public function bulkOperations(User $user): bool
     {
-        return $user->can('bulk-update-customers') || 
-               $user->can('activate-customers') || 
+        return $user->can('bulk-update-customers') ||
+               $user->can('activate-customers') ||
                $user->can('deactivate-customers') ||
                $user->can('delete-customers');
     }
@@ -116,7 +116,7 @@ class CustomerPolicy
      */
     public function viewAssets(User $user, Customer $customer): bool
     {
-        return $user->can('view-assets') && 
+        return $user->can('view-assets') &&
                $user->organization_id === $customer->organization_id;
     }
 
@@ -125,7 +125,7 @@ class CustomerPolicy
      */
     public function viewLocations(User $user, Customer $customer): bool
     {
-        return $user->can('view-locations') && 
+        return $user->can('view-locations') &&
                $user->organization_id === $customer->organization_id;
     }
-} 
+}

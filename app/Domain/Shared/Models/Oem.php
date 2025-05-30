@@ -53,7 +53,7 @@ class Oem extends Model
         });
 
         static::creating(function (Oem $oem) {
-            if (!$oem->organization_id && auth()->check()) {
+            if (! $oem->organization_id && auth()->check()) {
                 $oem->organization_id = auth()->user()->organization_id;
             }
         });
@@ -117,4 +117,4 @@ class Oem extends Model
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
-} 
+}

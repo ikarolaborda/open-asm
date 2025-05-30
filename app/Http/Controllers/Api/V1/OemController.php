@@ -69,14 +69,14 @@ class OemController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
-                                    new OA\Property(property: 'name',          type: 'string'),
-                                    new OA\Property(property: 'description',   type: 'string', nullable: true),
-                                    new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                                    new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name', type: 'string'),
+                                    new OA\Property(property: 'description', type: 'string', nullable: true),
+                                    new OA\Property(property: 'website', type: 'string', format: 'url', nullable: true),
                                     new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
-                                    new OA\Property(property: 'is_active',     type: 'boolean'),
-                                    new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
-                                    new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'is_active', type: 'boolean'),
+                                    new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                                 ],
                                 type: 'object'
                             )
@@ -90,8 +90,8 @@ class OemController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
-                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'url', type: 'string', nullable: true),
+                                    new OA\Property(property: 'label', type: 'string'),
                                     new OA\Property(property: 'active', type: 'boolean'),
                                 ],
                                 type: 'object'
@@ -166,14 +166,14 @@ class OemController extends Controller
                 description: 'OEM created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',          type: 'string'),
-                        new OA\Property(property: 'description',   type: 'string', nullable: true),
-                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'website', type: 'string', format: 'url', nullable: true),
                         new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
-                        new OA\Property(property: 'is_active',     type: 'boolean'),
-                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -216,14 +216,14 @@ class OemController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',          type: 'string'),
-                        new OA\Property(property: 'description',   type: 'string', nullable: true),
-                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'website', type: 'string', format: 'url', nullable: true),
                         new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
-                        new OA\Property(property: 'is_active',     type: 'boolean'),
-                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -296,14 +296,14 @@ class OemController extends Controller
                 description: 'OEM updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',          type: 'string'),
-                        new OA\Property(property: 'description',   type: 'string', nullable: true),
-                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'website', type: 'string', format: 'url', nullable: true),
                         new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
-                        new OA\Property(property: 'is_active',     type: 'boolean'),
-                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )

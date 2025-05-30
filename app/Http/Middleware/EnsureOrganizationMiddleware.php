@@ -17,10 +17,10 @@ class EnsureOrganizationMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json([
                 'message' => 'Unauthenticated',
-                'error' => 'User must be authenticated to access this resource.'
+                'error' => 'User must be authenticated to access this resource.',
             ], 401);
         }
 
@@ -32,29 +32,30 @@ class EnsureOrganizationMiddleware
             $request->attributes->set('organization', $user->organization);
             $request->attributes->set('organization_id', $user->organization_id);
             $request->attributes->set('is_super_admin', true);
+
             return $next($request);
         }
 
         // Regular users must have an organization assigned
-        if (!$user->organization_id) {
+        if (! $user->organization_id) {
             return response()->json([
                 'message' => 'Organization Required',
-                'error' => 'User must be assigned to an organization to access this resource.'
+                'error' => 'User must be assigned to an organization to access this resource.',
             ], 403);
         }
 
-        if (!$user->organization || !$user->organization->isActive()) {
+        if (! $user->organization || ! $user->organization->isActive()) {
             return response()->json([
                 'message' => 'Organization Inactive',
-                'error' => 'User\'s organization is not active or does not exist.'
+                'error' => 'User\'s organization is not active or does not exist.',
             ], 403);
         }
 
         // Check if user is active
-        if (!$user->isActive()) {
+        if (! $user->isActive()) {
             return response()->json([
                 'message' => 'User Inactive',
-                'error' => 'User account is not active.'
+                'error' => 'User account is not active.',
             ], 403);
         }
 

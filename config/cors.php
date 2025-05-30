@@ -19,7 +19,7 @@ return [
         'api/*',
         'sanctum/csrf-cookie',
         'docs',
-        'api/documentation'
+        'api/documentation',
     ],
 
     'allowed_methods' => ['*'],
@@ -30,7 +30,7 @@ return [
         'http://127.0.0.1:3000',
         'http://localhost:5173',
         'http://127.0.0.1:5173',
-        
+
         // Production origins (from environment)
         env('FRONTEND_URL', 'https://app.openasm.com'),
         env('FRONTEND_DOMAIN', 'https://openasm.com'),
@@ -40,7 +40,7 @@ return [
         // Allow localhost with any port for development
         '/^http:\/\/localhost(:\d+)?$/',
         '/^http:\/\/127\.0\.0\.1(:\d+)?$/',
-        
+
         // Allow staging/preview domains
         '/^https:\/\/.*\.vercel\.app$/',
         '/^https:\/\/.*\.netlify\.app$/',

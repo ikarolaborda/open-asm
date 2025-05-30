@@ -16,9 +16,8 @@ use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use OpenApi\Attributes as OA;
-use Symfony\Component\HttpFoundation\Response;
 
-#[OA\Tag(name: "User Management", description: "User and role management operations")]
+#[OA\Tag(name: 'User Management', description: 'User and role management operations')]
 class UserController extends Controller
 {
     public function __construct(
@@ -26,28 +25,28 @@ class UserController extends Controller
     ) {}
 
     #[OA\Get(
-        path: "/api/v1/users",
-        summary: "List users",
-        security: [["bearerAuth" => []]],
-        tags: ["User Management"],
+        path: '/api/v1/users',
+        summary: 'List users',
+        security: [['bearerAuth' => []]],
+        tags: ['User Management'],
         parameters: [
-            new OA\Parameter(name: "page", in: "query", schema: new OA\Schema(type: "integer", default: 1)),
-            new OA\Parameter(name: "per_page", in: "query", schema: new OA\Schema(type: "integer", default: 15)),
-            new OA\Parameter(name: "search", in: "query", schema: new OA\Schema(type: "string")),
-            new OA\Parameter(name: "role", in: "query", schema: new OA\Schema(type: "string")),
-            new OA\Parameter(name: "organization_id", in: "query", schema: new OA\Schema(type: "string", format: "uuid"))
+            new OA\Parameter(name: 'page', in: 'query', schema: new OA\Schema(type: 'integer', default: 1)),
+            new OA\Parameter(name: 'per_page', in: 'query', schema: new OA\Schema(type: 'integer', default: 15)),
+            new OA\Parameter(name: 'search', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'role', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'organization_id', in: 'query', schema: new OA\Schema(type: 'string', format: 'uuid')),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Users retrieved successfully",
+                description: 'Users retrieved successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "data", type: "array", items: new OA\Items(ref: "#/components/schemas/User")),
-                        new OA\Property(property: "meta", ref: "#/components/schemas/PaginationMeta")
+                        new OA\Property(property: 'data', type: 'array', items: new OA\Items(ref: '#/components/schemas/User')),
+                        new OA\Property(property: 'meta', ref: '#/components/schemas/PaginationMeta'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function index(Request $request): AnonymousResourceCollection
@@ -55,7 +54,7 @@ class UserController extends Controller
         $authUser = auth()->user();
         $query = User::with(['organization', 'roles', 'permissions']);
 
-        if (!$authUser->isSuperAdmin()) {
+        if (! $authUser->isSuperAdmin()) {
             $query->where('organization_id', $this->tenantService->getCurrentOrganizationId());
         }
 
@@ -70,7 +69,7 @@ class UserController extends Controller
         }
 
         if ($request->filled('role')) {
-            $query->whereHas('roles', fn($q) => $q->where('name', $request->string('role')));
+            $query->whereHas('roles', fn ($q) => $q->where('name', $request->string('role')));
         }
 
         if ($request->filled('organization_id') && $authUser->isSuperAdmin()) {
@@ -93,34 +92,34 @@ class UserController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/users",
-        summary: "Create a new user",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users',
+        summary: 'Create a new user',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ["name", "email", "password"],
+                required: ['name', 'email', 'password'],
                 properties: [
-                    new OA\Property(property: "name", type: "string"),
-                    new OA\Property(property: "first_name", type: "string"),
-                    new OA\Property(property: "last_name", type: "string"),
-                    new OA\Property(property: "email", type: "string", format: "email"),
-                    new OA\Property(property: "password", type: "string", minLength: 8),
-                    new OA\Property(property: "phone", type: "string"),
-                    new OA\Property(property: "title", type: "string"),
-                    new OA\Property(property: "department", type: "string"),
-                    new OA\Property(property: "role", type: "string", enum: ["super-admin", "admin", "user"]),
-                    new OA\Property(property: "organization_id", type: "string", format: "uuid")
+                    new OA\Property(property: 'name', type: 'string'),
+                    new OA\Property(property: 'first_name', type: 'string'),
+                    new OA\Property(property: 'last_name', type: 'string'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'password', type: 'string', minLength: 8),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'title', type: 'string'),
+                    new OA\Property(property: 'department', type: 'string'),
+                    new OA\Property(property: 'role', type: 'string', enum: ['super-admin', 'admin', 'user']),
+                    new OA\Property(property: 'organization_id', type: 'string', format: 'uuid'),
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 201,
-                description: "User created successfully",
-                content: new OA\JsonContent(ref: "#/components/schemas/User")
-            )
+                description: 'User created successfully',
+                content: new OA\JsonContent(ref: '#/components/schemas/User')
+            ),
         ]
     )]
     public function store(Request $request): JsonResponse
@@ -142,12 +141,12 @@ class UserController extends Controller
                 'uuid',
                 'exists:organizations,id',
                 // Super admins can assign to any org, others only to their own
-                $authUser->isSuperAdmin() ? '' : Rule::in([$this->tenantService->getCurrentOrganizationId()])
-            ]
+                $authUser->isSuperAdmin() ? '' : Rule::in([$this->tenantService->getCurrentOrganizationId()]),
+            ],
         ]);
 
         // Set organization_id if not provided and user is not super admin
-        if (!$validated['organization_id'] && !$authUser->isSuperAdmin()) {
+        if (! $validated['organization_id'] && ! $authUser->isSuperAdmin()) {
             $validated['organization_id'] = $this->tenantService->getCurrentOrganizationId();
         }
 
@@ -165,19 +164,19 @@ class UserController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/users/{id}",
-        summary: "Get user details",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users/{id}',
+        summary: 'Get user details',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         parameters: [
-            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid"))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid')),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User details retrieved successfully",
-                content: new OA\JsonContent(ref: "#/components/schemas/User")
-            )
+                description: 'User details retrieved successfully',
+                content: new OA\JsonContent(ref: '#/components/schemas/User')
+            ),
         ]
     )]
     public function show(string $id): JsonResponse
@@ -185,7 +184,7 @@ class UserController extends Controller
         $user = User::with(['organization', 'roles', 'permissions'])->findOrFail($id);
 
         // Check if user can access this user's details
-        if (!$this->tenantService->belongsToCurrentOrganization($user)) {
+        if (! $this->tenantService->belongsToCurrentOrganization($user)) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -193,35 +192,35 @@ class UserController extends Controller
     }
 
     #[OA\Put(
-        path: "/api/v1/users/{id}",
-        summary: "Update user",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users/{id}',
+        summary: 'Update user',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         parameters: [
-            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid"))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid')),
         ],
         requestBody: new OA\RequestBody(
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: "name", type: "string"),
-                    new OA\Property(property: "first_name", type: "string"),
-                    new OA\Property(property: "last_name", type: "string"),
-                    new OA\Property(property: "email", type: "string", format: "email"),
-                    new OA\Property(property: "password", type: "string", minLength: 8),
-                    new OA\Property(property: "phone", type: "string"),
-                    new OA\Property(property: "title", type: "string"),
-                    new OA\Property(property: "department", type: "string"),
-                    new OA\Property(property: "is_active", type: "boolean"),
-                    new OA\Property(property: "role", type: "string", enum: ["super-admin", "admin", "user"])
+                    new OA\Property(property: 'name', type: 'string'),
+                    new OA\Property(property: 'first_name', type: 'string'),
+                    new OA\Property(property: 'last_name', type: 'string'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'password', type: 'string', minLength: 8),
+                    new OA\Property(property: 'phone', type: 'string'),
+                    new OA\Property(property: 'title', type: 'string'),
+                    new OA\Property(property: 'department', type: 'string'),
+                    new OA\Property(property: 'is_active', type: 'boolean'),
+                    new OA\Property(property: 'role', type: 'string', enum: ['super-admin', 'admin', 'user']),
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: "User updated successfully",
-                content: new OA\JsonContent(ref: "#/components/schemas/User")
-            )
+                description: 'User updated successfully',
+                content: new OA\JsonContent(ref: '#/components/schemas/User')
+            ),
         ]
     )]
     public function update(Request $request, string $id): JsonResponse
@@ -229,7 +228,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         // Check if user can access this user
-        if (!$this->tenantService->belongsToCurrentOrganization($user)) {
+        if (! $this->tenantService->belongsToCurrentOrganization($user)) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -243,7 +242,7 @@ class UserController extends Controller
             'title' => 'nullable|string|max:255',
             'department' => 'nullable|string|max:255',
             'is_active' => 'sometimes|boolean',
-            'role' => ['sometimes', Rule::in(['super-admin', 'admin', 'user'])]
+            'role' => ['sometimes', Rule::in(['super-admin', 'admin', 'user'])],
         ]);
 
         if (isset($validated['password'])) {
@@ -263,15 +262,15 @@ class UserController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/v1/users/{id}",
-        summary: "Delete user",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users/{id}',
+        summary: 'Delete user',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         parameters: [
-            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "string", format: "uuid"))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid')),
         ],
         responses: [
-            new OA\Response(response: 204, description: "User deleted successfully")
+            new OA\Response(response: 204, description: 'User deleted successfully'),
         ]
     )]
     public function destroy(string $id): JsonResponse
@@ -279,7 +278,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         // Check if user can access this user
-        if (!$this->tenantService->belongsToCurrentOrganization($user)) {
+        if (! $this->tenantService->belongsToCurrentOrganization($user)) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
@@ -294,25 +293,25 @@ class UserController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/users/roles",
-        summary: "List all available roles",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users/roles',
+        summary: 'List all available roles',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Roles retrieved successfully",
+                description: 'Roles retrieved successfully',
                 content: new OA\JsonContent(
-                    type: "array",
+                    type: 'array',
                     items: new OA\Items(
                         properties: [
-                            new OA\Property(property: "id", type: "integer"),
-                            new OA\Property(property: "name", type: "string"),
-                            new OA\Property(property: "permissions", type: "array", items: new OA\Items(type: "string"))
+                            new OA\Property(property: 'id', type: 'integer'),
+                            new OA\Property(property: 'name', type: 'string'),
+                            new OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string')),
                         ]
                     )
                 )
-            )
+            ),
         ]
     )]
     public function roles(): JsonResponse
@@ -323,24 +322,24 @@ class UserController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/users/permissions",
-        summary: "List all available permissions",
-        tags: ["User Management"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/users/permissions',
+        summary: 'List all available permissions',
+        tags: ['User Management'],
+        security: [['bearerAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Permissions retrieved successfully",
+                description: 'Permissions retrieved successfully',
                 content: new OA\JsonContent(
-                    type: "array",
+                    type: 'array',
                     items: new OA\Items(
                         properties: [
-                            new OA\Property(property: "id", type: "integer"),
-                            new OA\Property(property: "name", type: "string")
+                            new OA\Property(property: 'id', type: 'integer'),
+                            new OA\Property(property: 'name', type: 'string'),
                         ]
                     )
                 )
-            )
+            ),
         ]
     )]
     public function permissions(): JsonResponse

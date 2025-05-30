@@ -133,7 +133,7 @@ class OrganizationService
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        if (isset($filters['search']) && !empty($filters['search'])) {
+        if (isset($filters['search']) && ! empty($filters['search'])) {
             $searchTerm = $filters['search'];
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
@@ -162,12 +162,12 @@ class OrganizationService
     public function isCodeUnique(string $code, ?string $excludeId = null): bool
     {
         $query = Organization::where('code', $code);
-        
+
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
-        
-        return !$query->exists();
+
+        return ! $query->exists();
     }
 
     /**
@@ -176,7 +176,7 @@ class OrganizationService
     public function getHealthStatus(Organization $organization): array
     {
         $statistics = $organization->getStatistics();
-        
+
         return [
             'overall_health' => $this->calculateHealthScore($statistics),
             'checks' => [
@@ -184,7 +184,7 @@ class OrganizationService
                 'has_users' => $statistics['users_count'] > 0,
                 'has_customers' => $statistics['customers_count'] > 0,
                 'has_assets' => $statistics['assets_count'] > 0,
-                'active_ratio' => $statistics['assets_count'] > 0 
+                'active_ratio' => $statistics['assets_count'] > 0
                     ? round(($statistics['active_assets_count'] / $statistics['assets_count']) * 100, 2)
                     : 100,
             ],
@@ -198,15 +198,21 @@ class OrganizationService
     private function calculateHealthScore(array $statistics): string
     {
         $score = 0;
-        
-        if ($statistics['users_count'] > 0) $score += 25;
-        if ($statistics['customers_count'] > 0) $score += 25;
-        if ($statistics['assets_count'] > 0) $score += 25;
-        if ($statistics['assets_count'] > 0 && 
+
+        if ($statistics['users_count'] > 0) {
+            $score += 25;
+        }
+        if ($statistics['customers_count'] > 0) {
+            $score += 25;
+        }
+        if ($statistics['assets_count'] > 0) {
+            $score += 25;
+        }
+        if ($statistics['assets_count'] > 0 &&
             ($statistics['active_assets_count'] / $statistics['assets_count']) > 0.8) {
             $score += 25;
         }
-        
+
         return match (true) {
             $score >= 90 => 'excellent',
             $score >= 70 => 'good',
@@ -221,26 +227,26 @@ class OrganizationService
     private function getHealthRecommendations(array $statistics): array
     {
         $recommendations = [];
-        
+
         if ($statistics['users_count'] === 0) {
             $recommendations[] = 'Add users to this organization';
         }
-        
+
         if ($statistics['customers_count'] === 0) {
             $recommendations[] = 'Add customers to start managing assets';
         }
-        
+
         if ($statistics['assets_count'] === 0) {
             $recommendations[] = 'Begin adding assets to track';
         }
-        
+
         if ($statistics['assets_count'] > 0) {
             $activeRatio = $statistics['active_assets_count'] / $statistics['assets_count'];
             if ($activeRatio < 0.8) {
                 $recommendations[] = 'Review inactive assets - consider reactivating or retiring';
             }
         }
-        
+
         return $recommendations;
     }
-} 
+}

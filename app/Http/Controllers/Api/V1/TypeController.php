@@ -86,14 +86,14 @@ class TypeController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
-                                    new OA\Property(property: 'name',        type: 'string'),
-                                    new OA\Property(property: 'code',        type: 'string', nullable: true),
+                                    new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name', type: 'string'),
+                                    new OA\Property(property: 'code', type: 'string', nullable: true),
                                     new OA\Property(property: 'description', type: 'string', nullable: true),
-                                    new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
-                                    new OA\Property(property: 'is_active',   type: 'boolean'),
-                                    new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
-                                    new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'category', type: 'string', enum: ['hardware', 'software', 'service'], nullable: true),
+                                    new OA\Property(property: 'is_active', type: 'boolean'),
+                                    new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                                 ],
                                 type: 'object'
                             )
@@ -109,8 +109,8 @@ class TypeController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
-                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'url', type: 'string', nullable: true),
+                                    new OA\Property(property: 'label', type: 'string'),
                                     new OA\Property(property: 'active', type: 'boolean'),
                                 ],
                                 type: 'object'
@@ -147,7 +147,7 @@ class TypeController extends Controller
                     new OA\Property(property: 'name', description: 'Type name', type: 'string', example: 'Laptop'),
                     new OA\Property(property: 'code', description: 'Type code', type: 'string', example: 'LAP'),
                     new OA\Property(property: 'description', description: 'Type description', type: 'string', example: 'Portable computing devices'),
-                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware','software','service'], example: 'hardware'),
+                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware', 'software', 'service'], example: 'hardware'),
                     new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean', example: true),
                 ],
                 type: 'object'
@@ -160,14 +160,14 @@ class TypeController extends Controller
                 description: 'Type created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',        type: 'string'),
-                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'code', type: 'string', nullable: true),
                         new OA\Property(property: 'description', type: 'string', nullable: true),
-                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
-                        new OA\Property(property: 'is_active',   type: 'boolean'),
-                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware', 'software', 'service'], nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -218,14 +218,14 @@ class TypeController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',        type: 'string'),
-                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'code', type: 'string', nullable: true),
                         new OA\Property(property: 'description', type: 'string', nullable: true),
-                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
-                        new OA\Property(property: 'is_active',   type: 'boolean'),
-                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware', 'software', 'service'], nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -240,7 +240,7 @@ class TypeController extends Controller
             ['assets']
         );
 
-        if (!empty($includes)) {
+        if (! empty($includes)) {
             $type->load($includes);
         }
 
@@ -260,7 +260,7 @@ class TypeController extends Controller
                     new OA\Property(property: 'name', description: 'Type name', type: 'string', example: 'Laptop'),
                     new OA\Property(property: 'code', description: 'Type code', type: 'string', example: 'LAP'),
                     new OA\Property(property: 'description', description: 'Type description', type: 'string', example: 'Portable computing devices'),
-                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware','software','service'], example: 'hardware'),
+                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware', 'software', 'service'], example: 'hardware'),
                     new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean', example: true),
                 ],
                 type: 'object'
@@ -282,14 +282,14 @@ class TypeController extends Controller
                 description: 'Type updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',        type: 'string'),
-                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'code', type: 'string', nullable: true),
                         new OA\Property(property: 'description', type: 'string', nullable: true),
-                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
-                        new OA\Property(property: 'is_active',   type: 'boolean'),
-                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware', 'software', 'service'], nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )

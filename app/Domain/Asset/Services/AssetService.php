@@ -130,8 +130,8 @@ class AssetService
         $retiredAssets = Asset::where('is_active', false)->count();
         $assetsWithWarranty = Asset::whereHas('warranties', function ($q) {
             $q->where('is_active', true)
-              ->where('start_date', '<=', now())
-              ->where('end_date', '>=', now());
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now());
         })->count();
         $assetsWithoutWarranty = $totalAssets - $assetsWithWarranty;
         $lowQualityAssets = Asset::where('data_quality_score', '<', 70)->count();
@@ -256,6 +256,7 @@ class AssetService
     public function retire(Asset $asset): Asset
     {
         $asset->retire();
+
         return $asset->fresh();
     }
 
@@ -265,6 +266,7 @@ class AssetService
     public function reactivate(Asset $asset): Asset
     {
         $asset->reactivate();
+
         return $asset->fresh();
     }
 
@@ -302,4 +304,4 @@ class AssetService
     {
         return $this->bulkUpdate($assetIds, ['is_active' => true]);
     }
-} 
+}

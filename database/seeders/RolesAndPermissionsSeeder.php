@@ -174,4 +174,4 @@ class RolesAndPermissionsSeeder extends Seeder
         $this->command->info('Created roles: super-admin, admin, user');
         $this->command->info('Created ' . count($permissions) . ' permissions');
     }
-} 
+}

@@ -55,7 +55,7 @@ class Product extends Model
         });
 
         static::creating(function (Product $product) {
-            if (!$product->organization_id && auth()->check()) {
+            if (! $product->organization_id && auth()->check()) {
                 $product->organization_id = auth()->user()->organization_id;
             }
         });
@@ -135,4 +135,4 @@ class Product extends Model
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
-} 
+}

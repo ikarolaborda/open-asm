@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,10 +13,10 @@ return new class extends Migration
     {
         // Store existing data
         $users = DB::table('users')->get();
-        
+
         // Drop and recreate the users table with proper structure
         Schema::dropIfExists('users');
-        
+
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
@@ -35,10 +34,10 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
-        
+
         // Restore existing users with new UUID structure
         foreach ($users as $user) {
             DB::table('users')->insert([
@@ -62,10 +61,10 @@ return new class extends Migration
     {
         // Store existing data
         $users = DB::table('users')->get();
-        
+
         // Drop and recreate with original structure
         Schema::dropIfExists('users');
-        
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -75,7 +74,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        
+
         // Restore users with auto-increment IDs
         foreach ($users as $user) {
             DB::table('users')->insert([

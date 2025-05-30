@@ -53,7 +53,7 @@ class Type extends Model
         });
 
         static::creating(function (Type $type) {
-            if (!$type->organization_id && auth()->check()) {
+            if (! $type->organization_id && auth()->check()) {
                 $type->organization_id = auth()->user()->organization_id;
             }
         });
@@ -109,4 +109,4 @@ class Type extends Model
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
-} 
+}

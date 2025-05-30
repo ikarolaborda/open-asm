@@ -52,7 +52,7 @@ class ProductLine extends Model
         });
 
         static::creating(function (ProductLine $productLine) {
-            if (!$productLine->organization_id && auth()->check()) {
+            if (! $productLine->organization_id && auth()->check()) {
                 $productLine->organization_id = auth()->user()->organization_id;
             }
         });
@@ -116,4 +116,4 @@ class ProductLine extends Model
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
-} 
+}

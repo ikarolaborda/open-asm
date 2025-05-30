@@ -86,11 +86,11 @@ class TagController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'id',         type: 'string', format: 'uuid'),
-                                    new OA\Property(property: 'name',       type: 'string'),
-                                    new OA\Property(property: 'color',      type: 'string', nullable: true),
-                                    new OA\Property(property: 'description',type: 'string', nullable: true),
-                                    new OA\Property(property: 'is_active',  type: 'boolean'),
+                                    new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name', type: 'string'),
+                                    new OA\Property(property: 'color', type: 'string', nullable: true),
+                                    new OA\Property(property: 'description', type: 'string', nullable: true),
+                                    new OA\Property(property: 'is_active', type: 'boolean'),
                                     new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                                     new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                                 ],
@@ -108,8 +108,8 @@ class TagController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
-                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'url', type: 'string', nullable: true),
+                                    new OA\Property(property: 'label', type: 'string'),
                                     new OA\Property(property: 'active', type: 'boolean'),
                                 ],
                                 type: 'object'
@@ -158,11 +158,11 @@ class TagController extends Controller
                 description: 'Tag created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',         type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',       type: 'string'),
-                        new OA\Property(property: 'color',      type: 'string', nullable: true),
-                        new OA\Property(property: 'description',type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',  type: 'boolean'),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'color', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
                         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
@@ -214,11 +214,11 @@ class TagController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',         type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',       type: 'string'),
-                        new OA\Property(property: 'color',      type: 'string', nullable: true),
-                        new OA\Property(property: 'description',type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',  type: 'boolean'),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'color', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
                         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
@@ -235,7 +235,7 @@ class TagController extends Controller
             ['assets']
         );
 
-        if (!empty($includes)) {
+        if (! empty($includes)) {
             $tag->load($includes);
         }
 
@@ -276,11 +276,11 @@ class TagController extends Controller
                 description: 'Tag updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',         type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',       type: 'string'),
-                        new OA\Property(property: 'color',      type: 'string', nullable: true),
-                        new OA\Property(property: 'description',type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',  type: 'boolean'),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'color', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
                         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
@@ -369,7 +369,7 @@ class TagController extends Controller
                 description: 'Tag attached to assets successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'message',        type: 'string', example: 'Tag attached to 2 assets'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Tag attached to 2 assets'),
                         new OA\Property(property: 'attached_count', type: 'integer', example: 2),
                     ],
                     type: 'object'
@@ -432,7 +432,7 @@ class TagController extends Controller
                 description: 'Tag detached from assets successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'message',        type: 'string', example: 'Tag detached from 2 assets'),
+                        new OA\Property(property: 'message', type: 'string', example: 'Tag detached from 2 assets'),
                         new OA\Property(property: 'detached_count', type: 'integer', example: 2),
                     ],
                     type: 'object'

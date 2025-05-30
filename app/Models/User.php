@@ -19,11 +19,12 @@ class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
-    use Notifiable;
-    use SoftDeletes;
+
+    use HasRoles;
     use HasUuids;
     use LogsActivity;
-    use HasRoles;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -111,7 +112,7 @@ class User extends Authenticatable implements JWTSubject
         if ($this->first_name && $this->last_name) {
             return trim($this->first_name . ' ' . $this->last_name);
         }
-        
+
         return $this->name ?? '';
     }
 
@@ -171,15 +172,15 @@ class User extends Authenticatable implements JWTSubject
         if ($this->isSuperAdmin()) {
             return 'super-admin';
         }
-        
+
         if ($this->isAdmin()) {
             return 'admin';
         }
-        
+
         if ($this->isUser()) {
             return 'user';
         }
-        
+
         return null;
     }
 
@@ -192,7 +193,7 @@ class User extends Authenticatable implements JWTSubject
         if ($this->isSuperAdmin()) {
             return true;
         }
-        
+
         // Regular users can only access their own organization
         return $this->organization_id === $organizationId;
     }

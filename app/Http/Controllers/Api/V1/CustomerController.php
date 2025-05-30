@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Customers", description: "Customer management endpoints")]
+#[OA\Tag(name: 'Customers', description: 'Customer management endpoints')]
 class CustomerController extends Controller
 {
     public function __construct(
@@ -26,46 +26,46 @@ class CustomerController extends Controller
     ) {}
 
     #[OA\Get(
-        path: "/api/v1/customers",
-        summary: "Get paginated list of customers",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers',
+        summary: 'Get paginated list of customers',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", minimum: 1, maximum: 100, default: 15)
+                schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100, default: 15)
             ),
             new OA\Parameter(
-                name: "sort",
-                in: "query",
-                description: "Sort field (prefix with - for descending)",
+                name: 'sort',
+                in: 'query',
+                description: 'Sort field (prefix with - for descending)',
                 required: false,
-                schema: new OA\Schema(type: "string", default: "name")
+                schema: new OA\Schema(type: 'string', default: 'name')
             ),
             new OA\Parameter(
-                name: "filter[is_active]",
-                in: "query",
-                description: "Filter by active status",
+                name: 'filter[is_active]',
+                in: 'query',
+                description: 'Filter by active status',
                 required: false,
-                schema: new OA\Schema(type: "boolean")
+                schema: new OA\Schema(type: 'boolean')
             ),
             new OA\Parameter(
-                name: "filter[customer_code]",
-                in: "query",
-                description: "Filter by customer code",
+                name: 'filter[customer_code]',
+                in: 'query',
+                description: 'Filter by customer code',
                 required: false,
-                schema: new OA\Schema(type: "string")
-            )
+                schema: new OA\Schema(type: 'string')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Successful response",
-                content: new OA\JsonContent(ref: "#/components/schemas/CustomerCollection")
-            )
+                description: 'Successful response',
+                content: new OA\JsonContent(ref: '#/components/schemas/CustomerCollection')
+            ),
         ]
     )]
     public function index(Request $request): CustomerCollection
@@ -85,25 +85,25 @@ class CustomerController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/customers",
-        summary: "Create a new customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers',
+        summary: 'Create a new customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: "#/components/schemas/CreateCustomerRequest")
+            content: new OA\JsonContent(ref: '#/components/schemas/CreateCustomerRequest')
         ),
         responses: [
             new OA\Response(
                 response: 201,
-                description: "Customer created successfully",
+                description: 'Customer created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string"),
-                        new OA\Property(property: "data", ref: "#/components/schemas/CustomerResource")
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/CustomerResource'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function store(CreateCustomerRequest $request): JsonResponse
@@ -133,25 +133,25 @@ class CustomerController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/customers/{customer}",
-        summary: "Get a specific customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{customer}',
+        summary: 'Get a specific customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "customer",
-                in: "path",
-                description: "Customer ID",
+                name: 'customer',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Successful response",
-                content: new OA\JsonContent(ref: "#/components/schemas/CustomerResource")
-            )
+                description: 'Successful response',
+                content: new OA\JsonContent(ref: '#/components/schemas/CustomerResource')
+            ),
         ]
     )]
     public function show(Request $request, Customer $customer): CustomerResource
@@ -169,34 +169,34 @@ class CustomerController extends Controller
     }
 
     #[OA\Put(
-        path: "/api/v1/customers/{customer}",
-        summary: "Update a customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{customer}',
+        summary: 'Update a customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "customer",
-                in: "path",
-                description: "Customer ID",
+                name: 'customer',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: "#/components/schemas/UpdateCustomerRequest")
+            content: new OA\JsonContent(ref: '#/components/schemas/UpdateCustomerRequest')
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer updated successfully",
+                description: 'Customer updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string"),
-                        new OA\Property(property: "data", ref: "#/components/schemas/CustomerResource")
+                        new OA\Property(property: 'message', type: 'string'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/CustomerResource'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse
@@ -227,29 +227,29 @@ class CustomerController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/v1/customers/{customer}",
-        summary: "Delete a customer (soft delete)",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{customer}',
+        summary: 'Delete a customer (soft delete)',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "customer",
-                in: "path",
-                description: "Customer ID",
+                name: 'customer',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer deleted successfully",
+                description: 'Customer deleted successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: "message", type: "string")
+                        new OA\Property(property: 'message', type: 'string'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function destroy(Customer $customer): JsonResponse
@@ -277,24 +277,24 @@ class CustomerController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/customers/{id}/restore",
-        summary: "Restore a soft-deleted customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{id}/restore',
+        summary: 'Restore a soft-deleted customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "id",
-                in: "path",
-                description: "Customer ID",
+                name: 'id',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer restored successfully"
-            )
+                description: 'Customer restored successfully'
+            ),
         ]
     )]
     public function restore(string $id): JsonResponse
@@ -323,24 +323,24 @@ class CustomerController extends Controller
     }
 
     #[OA\Delete(
-        path: "/api/v1/customers/{id}/force",
-        summary: "Permanently delete a customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{id}/force',
+        summary: 'Permanently delete a customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "id",
-                in: "path",
-                description: "Customer ID",
+                name: 'id',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer permanently deleted"
-            )
+                description: 'Customer permanently deleted'
+            ),
         ]
     )]
     public function forceDestroy(string $id): JsonResponse
@@ -368,24 +368,24 @@ class CustomerController extends Controller
     }
 
     #[OA\Patch(
-        path: "/api/v1/customers/{customer}/activate",
-        summary: "Activate a customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{customer}/activate',
+        summary: 'Activate a customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "customer",
-                in: "path",
-                description: "Customer ID",
+                name: 'customer',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer activated successfully"
-            )
+                description: 'Customer activated successfully'
+            ),
         ]
     )]
     public function activate(Customer $customer): JsonResponse
@@ -414,24 +414,24 @@ class CustomerController extends Controller
     }
 
     #[OA\Patch(
-        path: "/api/v1/customers/{customer}/deactivate",
-        summary: "Deactivate a customer",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/{customer}/deactivate',
+        summary: 'Deactivate a customer',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "customer",
-                in: "path",
-                description: "Customer ID",
+                name: 'customer',
+                in: 'path',
+                description: 'Customer ID',
                 required: true,
-                schema: new OA\Schema(type: "string", format: "uuid")
-            )
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer deactivated successfully"
-            )
+                description: 'Customer deactivated successfully'
+            ),
         ]
     )]
     public function deactivate(Customer $customer): JsonResponse
@@ -460,28 +460,28 @@ class CustomerController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/customers/bulk/activate",
-        summary: "Bulk activate customers",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/bulk/activate',
+        summary: 'Bulk activate customers',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 properties: [
                     new OA\Property(
-                        property: "customer_ids",
-                        type: "array",
-                        items: new OA\Items(type: "string", format: "uuid"),
-                        description: "Array of customer IDs to activate"
-                    )
+                        property: 'customer_ids',
+                        type: 'array',
+                        items: new OA\Items(type: 'string', format: 'uuid'),
+                        description: 'Array of customer IDs to activate'
+                    ),
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customers activated successfully"
-            )
+                description: 'Customers activated successfully'
+            ),
         ]
     )]
     public function bulkActivate(Request $request): JsonResponse
@@ -518,28 +518,28 @@ class CustomerController extends Controller
     }
 
     #[OA\Post(
-        path: "/api/v1/customers/bulk/deactivate",
-        summary: "Bulk deactivate customers",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/bulk/deactivate',
+        summary: 'Bulk deactivate customers',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 properties: [
                     new OA\Property(
-                        property: "customer_ids",
-                        type: "array",
-                        items: new OA\Items(type: "string", format: "uuid"),
-                        description: "Array of customer IDs to deactivate"
-                    )
+                        property: 'customer_ids',
+                        type: 'array',
+                        items: new OA\Items(type: 'string', format: 'uuid'),
+                        description: 'Array of customer IDs to deactivate'
+                    ),
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customers deactivated successfully"
-            )
+                description: 'Customers deactivated successfully'
+            ),
         ]
     )]
     public function bulkDeactivate(Request $request): JsonResponse
@@ -576,24 +576,24 @@ class CustomerController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/customers/incomplete-data",
-        summary: "Get customers with incomplete data",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/incomplete-data',
+        summary: 'Get customers with incomplete data',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", default: 15)
-            )
+                schema: new OA\Schema(type: 'integer', default: 15)
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customers with incomplete data"
-            )
+                description: 'Customers with incomplete data'
+            ),
         ]
     )]
     public function incompleteData(Request $request): CustomerCollection
@@ -610,29 +610,29 @@ class CustomerController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/customers/statistics",
-        summary: "Get customer statistics",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/statistics',
+        summary: 'Get customer statistics',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Customer statistics",
+                description: 'Customer statistics',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(
-                            property: "data",
-                            type: "object",
+                            property: 'data',
+                            type: 'object',
                             properties: [
-                                new OA\Property(property: "total", type: "integer"),
-                                new OA\Property(property: "active", type: "integer"),
-                                new OA\Property(property: "inactive", type: "integer"),
-                                new OA\Property(property: "incomplete_data", type: "integer")
+                                new OA\Property(property: 'total', type: 'integer'),
+                                new OA\Property(property: 'active', type: 'integer'),
+                                new OA\Property(property: 'inactive', type: 'integer'),
+                                new OA\Property(property: 'incomplete_data', type: 'integer'),
                             ]
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function statistics(): JsonResponse
@@ -659,31 +659,31 @@ class CustomerController extends Controller
     }
 
     #[OA\Get(
-        path: "/api/v1/customers/search",
-        summary: "Search customers",
-        tags: ["Customers"],
-        security: [["bearerAuth" => []]],
+        path: '/api/v1/customers/search',
+        summary: 'Search customers',
+        tags: ['Customers'],
+        security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: "q",
-                in: "query",
-                description: "Search query",
+                name: 'q',
+                in: 'query',
+                description: 'Search query',
                 required: true,
-                schema: new OA\Schema(type: "string", minLength: 2)
+                schema: new OA\Schema(type: 'string', minLength: 2)
             ),
             new OA\Parameter(
-                name: "per_page",
-                in: "query",
-                description: "Number of items per page",
+                name: 'per_page',
+                in: 'query',
+                description: 'Number of items per page',
                 required: false,
-                schema: new OA\Schema(type: "integer", default: 15)
-            )
+                schema: new OA\Schema(type: 'integer', default: 15)
+            ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
-                description: "Search results"
-            )
+                description: 'Search results'
+            ),
         ]
     )]
     public function search(Request $request): CustomerCollection

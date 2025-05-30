@@ -72,17 +72,17 @@ class CreateAssetRequest extends FormRequest
         return [
             'customer_id.required' => 'Customer is required.',
             'customer_id.exists' => 'Selected customer does not exist.',
-            
+
             'serial_number.required' => 'Serial number is required.',
             'serial_number.unique' => 'Serial number must be unique within your organization.',
-            
+
             'name.required' => 'Asset name is required.',
             'name.string' => 'Asset name must be a string.',
             'name.max' => 'Asset name cannot exceed 255 characters.',
 
             'purchase_date.before_or_equal' => 'Purchase date cannot be in the future.',
             'warranty_end_date.after_or_equal' => 'Warranty end date must be after or equal to warranty start date.',
-            
+
             'purchase_price.numeric' => 'Purchase price must be a valid number.',
             'purchase_price.min' => 'Purchase price cannot be negative.',
             'current_value.numeric' => 'Current value must be a valid number.',
@@ -160,11 +160,11 @@ class CreateAssetRequest extends FormRequest
     private function validateCustomerOrganization($validator): void
     {
         $organizationId = auth()->user()->organization_id;
-        
+
         if ($this->customer_id) {
             $customer = \App\Domain\Customer\Models\Customer::find($this->customer_id);
-            
-            if (!$customer || $customer->organization_id !== $organizationId) {
+
+            if (! $customer || $customer->organization_id !== $organizationId) {
                 $validator->errors()->add('customer_id', 'Customer does not belong to your organization.');
             }
         }
@@ -180,7 +180,7 @@ class CreateAssetRequest extends FormRequest
         // Validate location
         if ($this->location_id) {
             $location = \App\Domain\Location\Models\Location::find($this->location_id);
-            if (!$location || $location->organization_id !== $organizationId) {
+            if (! $location || $location->organization_id !== $organizationId) {
                 $validator->errors()->add('location_id', 'Location does not belong to your organization.');
             }
         }
@@ -199,4 +199,4 @@ class CreateAssetRequest extends FormRequest
             }
         }
     }
-} 
+}

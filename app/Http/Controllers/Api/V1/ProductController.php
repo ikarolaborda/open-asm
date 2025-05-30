@@ -92,16 +92,16 @@ class ProductController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'id',              type: 'string', format: 'uuid'),
-                                    new OA\Property(property: 'name',            type: 'string'),
-                                    new OA\Property(property: 'oem_id',          type: 'string', format: 'uuid', nullable: true),
+                                    new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name', type: 'string'),
+                                    new OA\Property(property: 'oem_id', type: 'string', format: 'uuid', nullable: true),
                                     new OA\Property(property: 'product_line_id', type: 'string', format: 'uuid', nullable: true),
-                                    new OA\Property(property: 'model_number',    type: 'string', nullable: true),
-                                    new OA\Property(property: 'part_number',     type: 'string', nullable: true),
-                                    new OA\Property(property: 'description',     type: 'string', nullable: true),
-                                    new OA\Property(property: 'is_active',       type: 'boolean'),
-                                    new OA\Property(property: 'created_at',      type: 'string', format: 'date-time'),
-                                    new OA\Property(property: 'updated_at',      type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'model_number', type: 'string', nullable: true),
+                                    new OA\Property(property: 'part_number', type: 'string', nullable: true),
+                                    new OA\Property(property: 'description', type: 'string', nullable: true),
+                                    new OA\Property(property: 'is_active', type: 'boolean'),
+                                    new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                                 ],
                                 type: 'object'
                             )
@@ -115,8 +115,8 @@ class ProductController extends Controller
                             type: 'array',
                             items: new OA\Items(
                                 properties: [
-                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
-                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'url', type: 'string', nullable: true),
+                                    new OA\Property(property: 'label', type: 'string'),
                                     new OA\Property(property: 'active', type: 'boolean'),
                                 ],
                                 type: 'object'
@@ -168,16 +168,16 @@ class ProductController extends Controller
                 description: 'Product created successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',              type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',            type: 'string'),
-                        new OA\Property(property: 'oem_id',          type: 'string', format: 'uuid', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'oem_id', type: 'string', format: 'uuid', nullable: true),
                         new OA\Property(property: 'product_line_id', type: 'string', format: 'uuid', nullable: true),
-                        new OA\Property(property: 'model_number',    type: 'string', nullable: true),
-                        new OA\Property(property: 'part_number',     type: 'string', nullable: true),
-                        new OA\Property(property: 'description',     type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',       type: 'boolean'),
-                        new OA\Property(property: 'created_at',      type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',      type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'model_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'part_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -230,16 +230,16 @@ class ProductController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',              type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',            type: 'string'),
-                        new OA\Property(property: 'oem_id',          type: 'string', format: 'uuid', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'oem_id', type: 'string', format: 'uuid', nullable: true),
                         new OA\Property(property: 'product_line_id', type: 'string', format: 'uuid', nullable: true),
-                        new OA\Property(property: 'model_number',    type: 'string', nullable: true),
-                        new OA\Property(property: 'part_number',     type: 'string', nullable: true),
-                        new OA\Property(property: 'description',     type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',       type: 'boolean'),
-                        new OA\Property(property: 'created_at',      type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',      type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'model_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'part_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )
@@ -254,7 +254,7 @@ class ProductController extends Controller
             ['oem', 'productLine', 'assets']
         );
 
-        if (!empty($includes)) {
+        if (! empty($includes)) {
             $product->load($includes);
         }
 
@@ -271,13 +271,13 @@ class ProductController extends Controller
             content: new OA\JsonContent(
                 required: ['name'],
                 properties: [
-                    new OA\Property(property: 'name',            type: 'string', example: 'Dell PowerEdge R750'),
-                    new OA\Property(property: 'oem_id',          type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000'),
+                    new OA\Property(property: 'name', type: 'string', example: 'Dell PowerEdge R750'),
+                    new OA\Property(property: 'oem_id', type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000'),
                     new OA\Property(property: 'product_line_id', type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440001'),
-                    new OA\Property(property: 'model_number',    type: 'string', example: 'R750'),
-                    new OA\Property(property: 'part_number',     type: 'string', example: 'PER750-001'),
-                    new OA\Property(property: 'description',     type: 'string', example: 'High-performance rack server'),
-                    new OA\Property(property: 'is_active',       type: 'boolean', example: true),
+                    new OA\Property(property: 'model_number', type: 'string', example: 'R750'),
+                    new OA\Property(property: 'part_number', type: 'string', example: 'PER750-001'),
+                    new OA\Property(property: 'description', type: 'string', example: 'High-performance rack server'),
+                    new OA\Property(property: 'is_active', type: 'boolean', example: true),
                 ],
                 type: 'object'
             )
@@ -298,16 +298,16 @@ class ProductController extends Controller
                 description: 'Product updated successfully',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'id',              type: 'string', format: 'uuid'),
-                        new OA\Property(property: 'name',            type: 'string'),
-                        new OA\Property(property: 'oem_id',          type: 'string', format: 'uuid', nullable: true),
+                        new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'oem_id', type: 'string', format: 'uuid', nullable: true),
                         new OA\Property(property: 'product_line_id', type: 'string', format: 'uuid', nullable: true),
-                        new OA\Property(property: 'model_number',    type: 'string', nullable: true),
-                        new OA\Property(property: 'part_number',     type: 'string', nullable: true),
-                        new OA\Property(property: 'description',     type: 'string', nullable: true),
-                        new OA\Property(property: 'is_active',       type: 'boolean'),
-                        new OA\Property(property: 'created_at',      type: 'string', format: 'date-time'),
-                        new OA\Property(property: 'updated_at',      type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'model_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'part_number', type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'is_active', type: 'boolean'),
+                        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                     ],
                     type: 'object'
                 )

@@ -82,10 +82,10 @@ class Asset extends Model
         });
 
         static::creating(function (Asset $asset) {
-            if (!$asset->organization_id && auth()->check()) {
+            if (! $asset->organization_id && auth()->check()) {
                 $asset->organization_id = auth()->user()->organization_id;
             }
-            
+
             // Calculate initial data quality score
             $asset->data_quality_score = $asset->calculateDataQualityScore();
         });
@@ -186,14 +186,14 @@ class Asset extends Model
     public function calculateDataQualityScore(): int
     {
         $requiredFields = [
-            'name', 'serial_number', 'customer_id', 'type_id'
+            'name', 'serial_number', 'customer_id', 'type_id',
         ];
-        
+
         $optionalFields = [
             'asset_tag', 'model_number', 'part_number', 'description',
             'purchase_date', 'installation_date', 'warranty_start_date',
             'warranty_end_date', 'purchase_price', 'location_id', 'oem_id',
-            'product_id', 'status_id'
+            'product_id', 'status_id',
         ];
 
         $requiredScore = 0;
@@ -201,14 +201,14 @@ class Asset extends Model
 
         // Check required fields (70% of total score)
         foreach ($requiredFields as $field) {
-            if (!empty($this->attributes[$field])) {
+            if (! empty($this->attributes[$field])) {
                 $requiredScore += 70 / count($requiredFields);
             }
         }
 
         // Check optional fields (30% of total score)
         foreach ($optionalFields as $field) {
-            if (!empty($this->attributes[$field])) {
+            if (! empty($this->attributes[$field])) {
                 $optionalScore += 30 / count($optionalFields);
             }
         }
@@ -229,7 +229,7 @@ class Asset extends Model
      */
     public function isRetired(): bool
     {
-        return !$this->is_active;
+        return ! $this->is_active;
     }
 
     /**
@@ -246,19 +246,19 @@ class Asset extends Model
     public function getWarrantyStatusAttribute(): string
     {
         $activeWarranty = $this->currentWarranty()->first();
-        
-        if (!$activeWarranty) {
+
+        if (! $activeWarranty) {
             return 'no_warranty';
         }
 
         $daysUntilExpiry = now()->diffInDays($activeWarranty->end_date, false);
-        
+
         if ($daysUntilExpiry < 0) {
             return 'expired';
         } elseif ($daysUntilExpiry <= 30) {
             return 'expiring_soon';
         }
-        
+
         return 'active';
     }
 
@@ -313,8 +313,8 @@ class Asset extends Model
     {
         return $query->whereHas('warranties', function ($q) {
             $q->where('is_active', true)
-              ->where('end_date', '>=', now())
-              ->where('end_date', '<=', now()->addDays(30));
+                ->where('end_date', '>=', now())
+                ->where('end_date', '<=', now()->addDays(30));
         });
     }
 
@@ -325,7 +325,7 @@ class Asset extends Model
     {
         return $query->whereHas('warranties', function ($q) {
             $q->where('is_active', true)
-              ->where('end_date', '<', now());
+                ->where('end_date', '<', now());
         });
     }
 
@@ -357,4 +357,4 @@ class Asset extends Model
     {
         return $query->where('location_id', $locationId);
     }
-} 
+}

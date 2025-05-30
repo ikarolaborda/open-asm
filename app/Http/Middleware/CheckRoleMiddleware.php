@@ -17,21 +17,21 @@ class CheckRoleMiddleware
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json([
                 'message' => 'Unauthenticated',
-                'error' => 'User must be authenticated to access this resource.'
+                'error' => 'User must be authenticated to access this resource.',
             ], 401);
         }
 
         $user = auth()->user();
 
-        if (!$user->hasAnyRole($roles)) {
+        if (! $user->hasAnyRole($roles)) {
             return response()->json([
                 'message' => 'Insufficient Role',
-                'error' => "You do not have the required role to access this resource. Required roles: " . implode(', ', $roles),
+                'error' => 'You do not have the required role to access this resource. Required roles: ' . implode(', ', $roles),
                 'required_roles' => $roles,
-                'user_roles' => $user->getRoleNames()->toArray()
+                'user_roles' => $user->getRoleNames()->toArray(),
             ], 403);
         }
 
