@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  # Laravel Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${DOCKER_BACKEND_PORT:-8000}:80"
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-http://localhost:8000}
+      - DB_CONNECTION=mysql
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-http://localhost:3000}
+      - SESSION_DOMAIN=${SESSION_DOMAIN:-localhost}
+      - SESSION_SECURE_COOKIE=${SESSION_SECURE_COOKIE:-false}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - storage_data:/var/www/html/storage
+      - ./logs:/var/log/nginx
+    depends_on:
+      - database
+    networks:
+      - openasm_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Vue.js Frontend
+  frontend:
+    build:
+      context: ./OpenASM-frontend
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "${DOCKER_FRONTEND_PORT:-3000}:80"
+    environment:
+      - VITE_API_URL=http://localhost:${DOCKER_BACKEND_PORT:-8000}/api
+      - VITE_APP_TITLE=OpenASM - Asset Management System
+    networks:
+      - openasm_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MySQL Database
+  database:
+    image: mysql:8.0
+    ports:
+      - "${DOCKER_DB_PORT:-3306}:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/docker-init:/docker-entrypoint-initdb.d
+    networks:
+      - openasm_network
+    restart: unless-stopped
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --innodb-buffer-pool-size=256M
+      --max-connections=200
+      --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - openasm_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+networks:
+  openasm_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  storage_data:
+    driver: local 

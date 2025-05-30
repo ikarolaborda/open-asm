@@ -1,0 +1,3139 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "OpenASM API",
+        "description": "OpenASM (Open Asset Management) REST API for comprehensive asset management with multi-tenancy support",
+        "contact": {
+            "name": "OpenASM Support",
+            "email": "admin@openasm.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "OpenASM API Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/assets": {
+            "get": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Get paginated list of assets",
+                "operationId": "88c700e21f1f3d103099eaf4feff4234",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort field (prefix with - for descending)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name"
+                        }
+                    },
+                    {
+                        "name": "filter[is_active]",
+                        "in": "query",
+                        "description": "Filter by active status",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filter[customer_id]",
+                        "in": "query",
+                        "description": "Filter by customer ID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetCollection"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Create a new asset",
+                "operationId": "2fb1aee31b7cb2b7b3425dfa58515b5b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAssetRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Asset created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/AssetResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{asset}": {
+            "get": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Get a specific asset",
+                "operationId": "a71f89beb1f8216847a1d6966586b012",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssetResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Update an asset",
+                "operationId": "9c3f18ff93d8bf2165480a4d7a36de05",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAssetRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Asset updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/AssetResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Delete an asset (soft delete)",
+                "operationId": "537ea0dce034c7f608407c3e33d6e661",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Asset deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{id}/restore": {
+            "post": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Restore a soft-deleted asset",
+                "operationId": "f3dcf1d11d851063ab5ee06a9e4dc4b3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Asset restored successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{id}/force": {
+            "delete": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Permanently delete an asset",
+                "operationId": "598e732001668f4f42baa26995fc549c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Asset permanently deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{asset}/retire": {
+            "patch": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Retire an asset",
+                "operationId": "d0d706af35c7e90393bf8967ec2061d0",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Asset retired successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{asset}/reactivate": {
+            "patch": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Reactivate a retired asset",
+                "operationId": "ac9484cdb99ba59f2383bb2c23fcc9a8",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Asset reactivated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/{asset}/calculate-quality": {
+            "patch": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Calculate and update data quality score",
+                "operationId": "487a94b305ff2be12155d5e2a3a78936",
+                "parameters": [
+                    {
+                        "name": "asset",
+                        "in": "path",
+                        "description": "Asset ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data quality calculated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/warranty/expiring-soon": {
+            "get": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Get assets with warranties expiring soon",
+                "operationId": "8f7af0a1773747b581cefa21ed96f020",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assets with expiring warranties"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/assets/warranty/expired": {
+            "get": {
+                "tags": [
+                    "Assets"
+                ],
+                "summary": "Get assets with expired warranties",
+                "operationId": "389b76840cc1798022eed33e2ffe4ab5",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Assets with expired warranties"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user and get JWT token",
+                "operationId": "8b1ca12fe82a8104a6fbb70f5e149956",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "User email",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "description": "User password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "JWT access token",
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "description": "Token expiration time in seconds",
+                                            "type": "integer"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "roles": {
+                                            "description": "User roles",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "permissions": {
+                                            "description": "User permissions",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh JWT token",
+                "operationId": "c42c3cd7fd7fe0dbd5bcc42962059e90",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "New JWT access token",
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "description": "Token expiration time in seconds",
+                                            "type": "integer"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "roles": {
+                                            "description": "User roles",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "permissions": {
+                                            "description": "User permissions",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token refresh failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get authenticated user information",
+                "operationId": "37d33f0281f67d31d05b4c45eea0143b",
+                "responses": {
+                    "200": {
+                        "description": "User information retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "roles": {
+                                            "description": "User roles",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "permissions": {
+                                            "description": "User permissions",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "organization": {
+                                            "description": "User's organization",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user and invalidate token",
+                "operationId": "f6b8957b4c0b25636613a9f0512a8ba9",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get paginated list of customers",
+                "operationId": "4446e25a8cf802d05268d8b26e3df4af",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort field (prefix with - for descending)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name"
+                        }
+                    },
+                    {
+                        "name": "filter[is_active]",
+                        "in": "query",
+                        "description": "Filter by active status",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "filter[customer_code]",
+                        "in": "query",
+                        "description": "Filter by customer code",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerCollection"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Create a new customer",
+                "operationId": "4000324e6e48b657b38514893267ba99",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Customer created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CustomerResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/{customer}": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get a specific customer",
+                "operationId": "239ca810caae47dc2e02fd10bfb19130",
+                "parameters": [
+                    {
+                        "name": "customer",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Update a customer",
+                "operationId": "65e716536c99a8ccc69bd8c030e844f2",
+                "parameters": [
+                    {
+                        "name": "customer",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Customer updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CustomerResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Delete a customer (soft delete)",
+                "operationId": "052123822971c729fc98e6af6beb3c04",
+                "parameters": [
+                    {
+                        "name": "customer",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/{id}/restore": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Restore a soft-deleted customer",
+                "operationId": "3cd8a12ee9ce7a0372fb856fea3ac057",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer restored successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/{id}/force": {
+            "delete": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Permanently delete a customer",
+                "operationId": "e9ff9b2105c2a8ccd341990556502cee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer permanently deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/{customer}/activate": {
+            "patch": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Activate a customer",
+                "operationId": "1dbdff36e38c5f9d9521e768905751f4",
+                "parameters": [
+                    {
+                        "name": "customer",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer activated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/{customer}/deactivate": {
+            "patch": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Deactivate a customer",
+                "operationId": "f0cbf911c69b924014cb69dff986622c",
+                "parameters": [
+                    {
+                        "name": "customer",
+                        "in": "path",
+                        "description": "Customer ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer deactivated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/bulk/activate": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Bulk activate customers",
+                "operationId": "c62d1599024a8e55bd3869680b0c144b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "customer_ids": {
+                                        "description": "Array of customer IDs to activate",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Customers activated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/bulk/deactivate": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Bulk deactivate customers",
+                "operationId": "1661d39db874dd87fe17b88214a56d1f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "customer_ids": {
+                                        "description": "Array of customer IDs to deactivate",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Customers deactivated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/incomplete-data": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get customers with incomplete data",
+                "operationId": "322501a48cf930ee3a688aea3f7a2d67",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customers with incomplete data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/statistics": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get customer statistics",
+                "operationId": "dacc6f80018ec4b01a2a4aac464ffda3",
+                "responses": {
+                    "200": {
+                        "description": "Customer statistics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "active": {
+                                                    "type": "integer"
+                                                },
+                                                "inactive": {
+                                                    "type": "integer"
+                                                },
+                                                "incomplete_data": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customers/search": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Search customers",
+                "operationId": "906d8d35a3fcae3cce07da2bdecaba3d",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 2
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search results"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/organization": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get current organization details",
+                "operationId": "4699fd1d00f8d6a5e5fbd390647f87ef",
+                "responses": {
+                    "200": {
+                        "description": "Organization details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizationResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "No organization assigned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/organization/overview": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get current organization overview with detailed information",
+                "operationId": "fec89867b66837747d0fc7e4d59766cf",
+                "responses": {
+                    "200": {
+                        "description": "Organization overview retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/OrganizationResource"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "statistics": {
+                                                    "type": "object"
+                                                },
+                                                "recent_customers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/CustomerResource"
+                                                    }
+                                                },
+                                                "recent_assets": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/AssetResource"
+                                                    }
+                                                },
+                                                "health": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/organization/statistics": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get current organization statistics",
+                "operationId": "d1fb067b1c4a2f607fef8c19d7e04d64",
+                "responses": {
+                    "200": {
+                        "description": "Organization statistics retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "users_count": {
+                                                    "type": "integer"
+                                                },
+                                                "customers_count": {
+                                                    "type": "integer"
+                                                },
+                                                "assets_count": {
+                                                    "type": "integer"
+                                                },
+                                                "locations_count": {
+                                                    "type": "integer"
+                                                },
+                                                "active_assets_count": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/organization/health": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Get current organization health status",
+                "operationId": "bf212c2cf79d6aa09e69c6387db8d623",
+                "responses": {
+                    "200": {
+                        "description": "Organization health status retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "overall_health": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "excellent",
+                                                        "good",
+                                                        "fair",
+                                                        "needs_attention"
+                                                    ]
+                                                },
+                                                "checks": {
+                                                    "properties": {
+                                                        "is_active": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "has_users": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "has_customers": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "has_assets": {
+                                                            "type": "boolean"
+                                                        },
+                                                        "active_ratio": {
+                                                            "type": "number",
+                                                            "format": "float"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "recommendations": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "List users",
+                "operationId": "12e989554c281d650dff75443acabf54",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Create a new user",
+                "operationId": "64da9b5a20fa4f20e947ed61b2bbb6da",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "department": {
+                                        "type": "string"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "super-admin",
+                                            "admin",
+                                            "user"
+                                        ]
+                                    },
+                                    "organization_id": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Get user details",
+                "operationId": "a9d321d5dc6bc2613c6cf5ba92b76c89",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Update user",
+                "operationId": "5bcda8371b3cb9f863a47620e636be9b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "first_name": {
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "department": {
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "super-admin",
+                                            "admin",
+                                            "user"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Delete user",
+                "operationId": "0446b3779430bbd9ca0f106d9fd0a2ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/roles": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "List all available roles",
+                "operationId": "d546fa8881cb67601886a50bfe8698a4",
+                "responses": {
+                    "200": {
+                        "description": "Roles retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "permissions": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/permissions": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "List all available permissions",
+                "operationId": "35d8dfd51cfde20eeee738ad49a767a7",
+                "responses": {
+                    "200": {
+                        "description": "Permissions retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Error": {
+                "properties": {
+                    "message": {
+                        "description": "Error message",
+                        "type": "string"
+                    },
+                    "error": {
+                        "description": "Detailed error information",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Pagination": {
+                "properties": {
+                    "current_page": {
+                        "description": "Current page number",
+                        "type": "integer"
+                    },
+                    "last_page": {
+                        "description": "Last page number",
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "description": "Items per page",
+                        "type": "integer"
+                    },
+                    "total": {
+                        "description": "Total number of items",
+                        "type": "integer"
+                    },
+                    "from": {
+                        "description": "First item number on current page",
+                        "type": "integer"
+                    },
+                    "to": {
+                        "description": "Last item number on current page",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "properties": {
+                    "current_page": {
+                        "description": "Current page number",
+                        "type": "integer"
+                    },
+                    "from": {
+                        "description": "First item number on current page",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "last_page": {
+                        "description": "Last page number",
+                        "type": "integer"
+                    },
+                    "path": {
+                        "description": "Base URL for pagination",
+                        "type": "string"
+                    },
+                    "per_page": {
+                        "description": "Items per page",
+                        "type": "integer"
+                    },
+                    "to": {
+                        "description": "Last item number on current page",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "total": {
+                        "description": "Total number of items",
+                        "type": "integer"
+                    },
+                    "links": {
+                        "description": "Pagination links",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "url": {
+                                    "description": "Page URL",
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "label": {
+                                    "description": "Page label",
+                                    "type": "string"
+                                },
+                                "active": {
+                                    "description": "Whether this is the current page",
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CreateAssetRequest": {
+                "required": [
+                    "customer_id",
+                    "serial_number",
+                    "name"
+                ],
+                "properties": {
+                    "customer_id": {
+                        "description": "Customer ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "location_id": {
+                        "description": "Location ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "oem_id": {
+                        "description": "OEM ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "product_id": {
+                        "description": "Product ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "type_id": {
+                        "description": "Asset type ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "status_id": {
+                        "description": "Status ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "serial_number": {
+                        "description": "Unique serial number",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "asset_tag": {
+                        "description": "Asset tag",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "model_number": {
+                        "description": "Model number",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "part_number": {
+                        "description": "Part number",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "name": {
+                        "description": "Asset name",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "description": "Asset description",
+                        "type": "string",
+                        "maxLength": 2000,
+                        "nullable": true
+                    },
+                    "purchase_date": {
+                        "description": "Purchase date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "installation_date": {
+                        "description": "Installation date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_start_date": {
+                        "description": "Warranty start date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_end_date": {
+                        "description": "Warranty end date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "purchase_price": {
+                        "description": "Purchase price",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "current_value": {
+                        "description": "Current value",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "description": "Array of tag IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateAssetRequest": {
+                "properties": {
+                    "customer_id": {
+                        "description": "Customer ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "location_id": {
+                        "description": "Location ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "oem_id": {
+                        "description": "OEM ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "product_id": {
+                        "description": "Product ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "type_id": {
+                        "description": "Asset type ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "status_id": {
+                        "description": "Status ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "serial_number": {
+                        "description": "Unique serial number",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "asset_tag": {
+                        "description": "Asset tag",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "model_number": {
+                        "description": "Model number",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "part_number": {
+                        "description": "Part number",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "name": {
+                        "description": "Asset name",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "description": "Asset description",
+                        "type": "string",
+                        "maxLength": 2000,
+                        "nullable": true
+                    },
+                    "purchase_date": {
+                        "description": "Purchase date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "installation_date": {
+                        "description": "Installation date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_start_date": {
+                        "description": "Warranty start date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_end_date": {
+                        "description": "Warranty end date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "purchase_price": {
+                        "description": "Purchase price",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "current_value": {
+                        "description": "Current value",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean"
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "description": "Array of tag IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateCustomerRequest": {
+                "required": [
+                    "name",
+                    "customer_code"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Customer name",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "customer_code": {
+                        "description": "Unique customer code",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "email": {
+                        "description": "Customer email",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Customer phone",
+                        "type": "string",
+                        "maxLength": 50,
+                        "nullable": true
+                    },
+                    "website": {
+                        "description": "Customer website",
+                        "type": "string",
+                        "format": "url",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "address_line_1": {
+                        "description": "Address line 1",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "address_line_2": {
+                        "description": "Address line 2",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "city": {
+                        "description": "City",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "state": {
+                        "description": "State/Province",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "description": "Postal code",
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCustomerRequest": {
+                "properties": {
+                    "name": {
+                        "description": "Customer name",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "customer_code": {
+                        "description": "Unique customer code",
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "email": {
+                        "description": "Customer email",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Customer phone",
+                        "type": "string",
+                        "maxLength": 50,
+                        "nullable": true
+                    },
+                    "website": {
+                        "description": "Customer website",
+                        "type": "string",
+                        "format": "url",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "address_line_1": {
+                        "description": "Address line 1",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "address_line_2": {
+                        "description": "Address line 2",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "city": {
+                        "description": "City",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "state": {
+                        "description": "State/Province",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "description": "Postal code",
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string",
+                        "maxLength": 100,
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean"
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerResource": {
+                "properties": {
+                    "id": {
+                        "description": "Customer ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "organization_id": {
+                        "description": "Organization ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "description": "Customer name",
+                        "type": "string"
+                    },
+                    "customer_code": {
+                        "description": "Customer code",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Customer email",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Customer phone",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "website": {
+                        "description": "Customer website",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address_line_1": {
+                        "description": "Address line 1",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address_line_2": {
+                        "description": "Address line 2",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "city": {
+                        "description": "City",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "state": {
+                        "description": "State/Province",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "description": "Postal code",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean"
+                    },
+                    "data_quality_score": {
+                        "description": "Data quality score (0-100)",
+                        "type": "integer"
+                    },
+                    "assets_count": {
+                        "description": "Number of assets",
+                        "type": "integer"
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Array of customer resources",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CustomerResource"
+                        }
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    "links": {
+                        "properties": {
+                            "first": {
+                                "description": "First page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "last": {
+                                "description": "Last page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "prev": {
+                                "description": "Previous page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "next": {
+                                "description": "Next page URL",
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "OrganizationResource": {
+                "title": "Organization Resource",
+                "description": "Organization data representation",
+                "properties": {
+                    "id": {
+                        "description": "Organization unique identifier",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "description": "Organization name",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "Organization code",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Organization email",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "description": "Organization phone",
+                        "type": "string"
+                    },
+                    "website": {
+                        "description": "Organization website",
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "description": {
+                        "description": "Organization description",
+                        "type": "string"
+                    },
+                    "address": {
+                        "description": "Organization address",
+                        "type": "string"
+                    },
+                    "city": {
+                        "description": "Organization city",
+                        "type": "string"
+                    },
+                    "state": {
+                        "description": "Organization state",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "Organization country",
+                        "type": "string"
+                    },
+                    "postal_code": {
+                        "description": "Organization postal code",
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "description": "Whether the organization is active",
+                        "type": "boolean"
+                    },
+                    "metadata": {
+                        "description": "Additional organization metadata",
+                        "type": "object"
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Organization": {
+                "properties": {
+                    "id": {
+                        "description": "Organization unique identifier",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "description": "Organization name",
+                        "type": "string"
+                    },
+                    "code": {
+                        "description": "Organization code",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Organization email",
+                        "type": "string",
+                        "format": "email",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "Organization phone",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "website": {
+                        "description": "Organization website",
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true
+                    },
+                    "description": {
+                        "description": "Organization description",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "address": {
+                        "description": "Organization address",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "city": {
+                        "description": "Organization city",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "state": {
+                        "description": "Organization state",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "country": {
+                        "description": "Organization country",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "postal_code": {
+                        "description": "Organization postal code",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Whether the organization is active",
+                        "type": "boolean"
+                    },
+                    "metadata": {
+                        "description": "Additional organization metadata",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "department": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "organization_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "organization": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Organization"
+                            }
+                        ],
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "AssetCollection": {
+                "properties": {
+                    "data": {
+                        "description": "Array of asset resources",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AssetResource"
+                        }
+                    },
+                    "links": {
+                        "properties": {
+                            "first": {
+                                "description": "First page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "last": {
+                                "description": "Last page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "prev": {
+                                "description": "Previous page URL",
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "next": {
+                                "description": "Next page URL",
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "meta": {
+                        "properties": {
+                            "current_page": {
+                                "description": "Current page number",
+                                "type": "integer"
+                            },
+                            "from": {
+                                "description": "First item number on current page",
+                                "type": "integer",
+                                "nullable": true
+                            },
+                            "last_page": {
+                                "description": "Last page number",
+                                "type": "integer"
+                            },
+                            "path": {
+                                "description": "Base path for pagination",
+                                "type": "string"
+                            },
+                            "per_page": {
+                                "description": "Items per page",
+                                "type": "integer"
+                            },
+                            "to": {
+                                "description": "Last item number on current page",
+                                "type": "integer",
+                                "nullable": true
+                            },
+                            "total": {
+                                "description": "Total number of items",
+                                "type": "integer"
+                            },
+                            "filters": {
+                                "description": "Applied filters",
+                                "type": "object",
+                                "nullable": true
+                            },
+                            "sort": {
+                                "description": "Applied sorting",
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "AssetResource": {
+                "properties": {
+                    "id": {
+                        "description": "Asset ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "organization_id": {
+                        "description": "Organization ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "customer_id": {
+                        "description": "Customer ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "location_id": {
+                        "description": "Location ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "oem_id": {
+                        "description": "OEM ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "product_id": {
+                        "description": "Product ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "type_id": {
+                        "description": "Type ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "status_id": {
+                        "description": "Status ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "nullable": true
+                    },
+                    "serial_number": {
+                        "description": "Serial number",
+                        "type": "string"
+                    },
+                    "asset_tag": {
+                        "description": "Asset tag",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "model_number": {
+                        "description": "Model number",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "part_number": {
+                        "description": "Part number",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "name": {
+                        "description": "Asset name",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "purchase_date": {
+                        "description": "Purchase date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "installation_date": {
+                        "description": "Installation date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_start_date": {
+                        "description": "Warranty start date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "warranty_end_date": {
+                        "description": "Warranty end date",
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "purchase_price": {
+                        "description": "Purchase price",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "current_value": {
+                        "description": "Current value",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "description": "Active status",
+                        "type": "boolean"
+                    },
+                    "data_quality_score": {
+                        "description": "Data quality score (0-100)",
+                        "type": "integer"
+                    },
+                    "metadata": {
+                        "description": "Additional metadata",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "warranty_status": {
+                        "description": "Warranty status (active, expiring_soon, expired, no_warranty)",
+                        "type": "string"
+                    },
+                    "has_active_warranty": {
+                        "description": "Whether asset has active warranty",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "organization": {
+                        "description": "Organization details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "customer": {
+                        "description": "Customer details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "location": {
+                        "description": "Location details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "oem": {
+                        "description": "OEM details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "product": {
+                        "description": "Product details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "type": {
+                        "description": "Asset type details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "status": {
+                        "description": "Status details",
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "warranties": {
+                        "description": "Warranty records",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "tags": {
+                        "description": "Associated tags",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Enter your JWT token in the format: Bearer {token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Assets",
+            "description": "Asset management endpoints"
+        },
+        {
+            "name": "Authentication",
+            "description": "JWT Authentication endpoints"
+        },
+        {
+            "name": "Customers",
+            "description": "Customer management endpoints"
+        },
+        {
+            "name": "Organizations",
+            "description": "Organization management endpoints"
+        },
+        {
+            "name": "User Management",
+            "description": "User and role management operations"
+        }
+    ]
+}
