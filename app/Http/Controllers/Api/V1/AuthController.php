@@ -7,9 +7,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use OpenApi\Attributes as OA;
-use Illuminate\Support\Facades\Hash;
 
 #[OA\Tag(name: 'Authentication', description: 'JWT Authentication endpoints')]
 class AuthController extends Controller
@@ -33,6 +33,7 @@ class AuthController extends Controller
                 response: 200,
                 description: 'Login successful',
                 content: new OA\JsonContent(
+                    type: 'object',
                     properties: [
                         new OA\Property(property: 'access_token', type: 'string', description: 'JWT access token'),
                         new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
@@ -63,36 +64,36 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required|string',
         ]);
 
         if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid credentials',
-                'error' => 'The provided credentials are incorrect.',
+                'error'   => 'The provided credentials are incorrect.',
             ], 401);
         }
 
-        $user = JWTAuth::user();
-        $roles = $user->getRoleNames()->toArray();
+        $user        = JWTAuth::user();
+        $roles       = $user->getRoleNames()->toArray();
         $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
+            'token_type'   => 'bearer',
+            'expires_in'   => config('jwt.ttl') * 60,
+            'user'         => $user,
+            'roles'        => $roles,
+            'permissions'  => $permissions,
         ]);
     }
 
     #[OA\Post(
         path: '/api/v1/auth/refresh',
         summary: 'Refresh JWT token',
-        tags: ['Authentication'],
         security: [['bearerAuth' => []]],
+        tags: ['Authentication'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -115,7 +116,8 @@ class AuthController extends Controller
                             items: new OA\Items(type: 'string'),
                             description: 'User permissions'
                         ),
-                    ]
+                    ],
+                    type: 'object'
                 )
             ),
             new OA\Response(
@@ -128,33 +130,31 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
         try {
-            // Get the token from the request
             $token = JWTAuth::getToken();
             if (! $token) {
                 return response()->json([
                     'message' => 'Token refresh failed',
-                    'error' => 'Token not found in request',
+                    'error'   => 'Token not found in request',
                 ], 401);
             }
 
-            // Refresh the token
-            $newToken = JWTAuth::refresh($token);
-            $user = JWTAuth::setToken($newToken)->toUser();
-            $roles = $user->getRoleNames()->toArray();
+            $newToken    = JWTAuth::refresh($token);
+            $user        = JWTAuth::setToken($newToken)->toUser();
+            $roles       = $user->getRoleNames()->toArray();
             $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
             return response()->json([
                 'access_token' => $newToken,
-                'token_type' => 'bearer',
-                'expires_in' => config('jwt.ttl') * 60,
-                'user' => $user,
-                'roles' => $roles,
-                'permissions' => $permissions,
+                'token_type'   => 'bearer',
+                'expires_in'   => config('jwt.ttl') * 60,
+                'user'         => $user,
+                'roles'        => $roles,
+                'permissions'  => $permissions,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Token refresh failed',
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], 401);
         }
     }
@@ -169,6 +169,7 @@ class AuthController extends Controller
                 response: 200,
                 description: 'User information retrieved successfully',
                 content: new OA\JsonContent(
+                    type: 'object',
                     properties: [
                         new OA\Property(property: 'user', ref: '#/components/schemas/User'),
                         new OA\Property(
@@ -196,14 +197,14 @@ class AuthController extends Controller
     )]
     public function me(): JsonResponse
     {
-        $user = auth()->user();
-        $roles = $user->getRoleNames()->toArray();
+        $user        = auth()->user();
+        $roles       = $user->getRoleNames()->toArray();
         $permissions = $user->getAllPermissions()->pluck('name')->toArray();
 
         return response()->json([
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
+            'user'         => $user,
+            'roles'        => $roles,
+            'permissions'  => $permissions,
             'organization' => $user->organization,
         ]);
     }
@@ -218,6 +219,7 @@ class AuthController extends Controller
                 response: 200,
                 description: 'Successfully logged out',
                 content: new OA\JsonContent(
+                    type: 'object',
                     properties: [
                         new OA\Property(property: 'message', type: 'string', example: 'Successfully logged out'),
                     ]
@@ -242,7 +244,6 @@ class AuthController extends Controller
     #[OA\Put(
         path: '/api/v1/auth/password',
         summary: 'Change user password',
-        tags: ['Authentication'],
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
@@ -252,9 +253,11 @@ class AuthController extends Controller
                     new OA\Property(property: 'current_password', type: 'string', description: 'Current password'),
                     new OA\Property(property: 'password', type: 'string', description: 'New password'),
                     new OA\Property(property: 'password_confirmation', type: 'string', description: 'New password confirmation'),
-                ]
+                ],
+                type: 'object'
             )
         ),
+        tags: ['Authentication'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -262,13 +265,27 @@ class AuthController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'message', type: 'string', example: 'Password updated successfully.'),
-                    ]
+                    ],
+                    type: 'object'
                 )
             ),
             new OA\Response(
                 response: 422,
                 description: 'Validation error',
-                content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Validation failed'),
+                        new OA\Property(
+                            property: 'errors',
+                            type: 'object',
+                            additionalProperties: new OA\AdditionalProperties(
+                                type: 'array',
+                                items: new OA\Items(type: 'string')
+                            )
+                        ),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(
                 response: 401,
@@ -281,22 +298,20 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => 'required|string',
-            'password' => 'required|string|min:8|confirmed',
+            'password'         => 'required|string|min:8|confirmed',
         ]);
 
         $user = auth()->user();
 
-        // Check if the current password is correct
         if (! Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'message' => 'Validation failed',
-                'errors' => [
+                'errors'  => [
                     'current_password' => ['The current password is incorrect.'],
                 ],
             ], 422);
         }
 
-        // Update the password
         $user->update([
             'password' => Hash::make($request->password),
         ]);

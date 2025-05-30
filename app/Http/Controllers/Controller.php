@@ -6,13 +6,19 @@ namespace App\Http\Controllers;
 
 use OpenApi\Attributes as OA;
 
+#[OA\OpenApi(
+    security: [
+        ['bearerAuth' => []],
+    ]
+)]
+
 #[OA\Info(
-    title: 'OpenASM API',
     version: '1.0.0',
     description: 'OpenASM (Open Asset Management) REST API for comprehensive asset management with multi-tenancy support',
+    title: 'OpenASM API',
     contact: new OA\Contact(
-        email: 'admin@openasm.com',
-        name: 'OpenASM Support'
+        name: 'OpenASM Support',
+        email: 'admin@openasm.com'
     ),
     license: new OA\License(
         name: 'MIT',
@@ -26,9 +32,9 @@ use OpenApi\Attributes as OA;
 #[OA\SecurityScheme(
     securityScheme: 'bearerAuth',
     type: 'http',
-    scheme: 'bearer',
+    description: 'Enter your JWT token in the format: Bearer {token}',
     bearerFormat: 'JWT',
-    description: 'Enter your JWT token in the format: Bearer {token}'
+    scheme: 'bearer'
 )]
 #[OA\Schema(
     schema: 'Error',
@@ -184,7 +190,6 @@ use OpenApi\Attributes as OA;
 )]
 #[OA\Schema(
     schema: 'CustomerResource',
-    type: 'object',
     properties: [
         new OA\Property(property: 'id', type: 'string', format: 'uuid', description: 'Customer ID'),
         new OA\Property(property: 'organization_id', type: 'string', format: 'uuid', description: 'Organization ID'),
@@ -205,11 +210,11 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'metadata', type: 'object', nullable: true, description: 'Additional metadata'),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time', description: 'Creation timestamp'),
         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', description: 'Last update timestamp'),
-    ]
+    ],
+    type: 'object'
 )]
 #[OA\Schema(
     schema: 'CustomerCollection',
-    type: 'object',
     properties: [
         new OA\Property(
             property: 'data',
@@ -220,42 +225,42 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'meta', ref: '#/components/schemas/Pagination', description: 'Pagination metadata'),
         new OA\Property(
             property: 'links',
-            type: 'object',
             properties: [
                 new OA\Property(property: 'first', type: 'string', nullable: true, description: 'First page URL'),
                 new OA\Property(property: 'last', type: 'string', nullable: true, description: 'Last page URL'),
                 new OA\Property(property: 'prev', type: 'string', nullable: true, description: 'Previous page URL'),
                 new OA\Property(property: 'next', type: 'string', nullable: true, description: 'Next page URL'),
-            ]
+            ],
+            type: 'object'
         ),
-    ]
+    ],
+    type: 'object'
 )]
 #[OA\Schema(
     schema: 'OrganizationResource',
     title: 'Organization Resource',
     description: 'Organization data representation',
     properties: [
-        new OA\Property(property: 'id', type: 'string', format: 'uuid', description: 'Organization unique identifier'),
-        new OA\Property(property: 'name', type: 'string', description: 'Organization name'),
-        new OA\Property(property: 'code', type: 'string', description: 'Organization code'),
-        new OA\Property(property: 'email', type: 'string', format: 'email', description: 'Organization email'),
-        new OA\Property(property: 'phone', type: 'string', description: 'Organization phone'),
-        new OA\Property(property: 'website', type: 'string', format: 'uri', description: 'Organization website'),
-        new OA\Property(property: 'description', type: 'string', description: 'Organization description'),
-        new OA\Property(property: 'address', type: 'string', description: 'Organization address'),
-        new OA\Property(property: 'city', type: 'string', description: 'Organization city'),
-        new OA\Property(property: 'state', type: 'string', description: 'Organization state'),
-        new OA\Property(property: 'country', type: 'string', description: 'Organization country'),
-        new OA\Property(property: 'postal_code', type: 'string', description: 'Organization postal code'),
-        new OA\Property(property: 'is_active', type: 'boolean', description: 'Whether the organization is active'),
-        new OA\Property(property: 'metadata', type: 'object', description: 'Additional organization metadata'),
-        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', description: 'Creation timestamp'),
-        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', description: 'Last update timestamp'),
+        new OA\Property(property: 'id', description: 'Organization unique identifier', type: 'string', format: 'uuid'),
+        new OA\Property(property: 'name', description: 'Organization name', type: 'string'),
+        new OA\Property(property: 'code', description: 'Organization code', type: 'string'),
+        new OA\Property(property: 'email', description: 'Organization email', type: 'string', format: 'email'),
+        new OA\Property(property: 'phone', description: 'Organization phone', type: 'string'),
+        new OA\Property(property: 'website', description: 'Organization website', type: 'string', format: 'uri'),
+        new OA\Property(property: 'description', description: 'Organization description', type: 'string'),
+        new OA\Property(property: 'address', description: 'Organization address', type: 'string'),
+        new OA\Property(property: 'city', description: 'Organization city', type: 'string'),
+        new OA\Property(property: 'state', description: 'Organization state', type: 'string'),
+        new OA\Property(property: 'country', description: 'Organization country', type: 'string'),
+        new OA\Property(property: 'postal_code', description: 'Organization postal code', type: 'string'),
+        new OA\Property(property: 'is_active', description: 'Whether the organization is active', type: 'boolean'),
+        new OA\Property(property: 'metadata', description: 'Additional organization metadata', type: 'object'),
+        new OA\Property(property: 'created_at', description: 'Creation timestamp', type: 'string', format: 'date-time'),
+        new OA\Property(property: 'updated_at', description: 'Last update timestamp', type: 'string', format: 'date-time'),
     ]
 )]
 #[OA\Schema(
     schema: 'Organization',
-    type: 'object',
     properties: [
         new OA\Property(property: 'id', type: 'string', format: 'uuid', description: 'Organization unique identifier'),
         new OA\Property(property: 'name', type: 'string', description: 'Organization name'),
@@ -273,11 +278,11 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'metadata', type: 'object', nullable: true, description: 'Additional organization metadata'),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time', description: 'Creation timestamp'),
         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', description: 'Last update timestamp'),
-    ]
+    ],
+    type: 'object'
 )]
 #[OA\Schema(
     schema: 'User',
-    type: 'object',
     properties: [
         new OA\Property(property: 'id', type: 'string', format: 'uuid'),
         new OA\Property(property: 'name', type: 'string'),
@@ -294,6 +299,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
         new OA\Property(property: 'organization', ref: '#/components/schemas/Organization', nullable: true),
-    ]
+    ],
+    type: 'object'
 )]
 abstract class Controller {}
