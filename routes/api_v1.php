@@ -3,7 +3,12 @@
 use App\Http\Controllers\Api\V1\AssetController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\LocationController;
+use App\Http\Controllers\Api\V1\OemController;
 use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\TagController;
+use App\Http\Controllers\Api\V1\TypeController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -129,5 +134,34 @@ Route::middleware(['auth:api', 'ensure.organization'])->group(function () {
         Route::patch('{customer}/deactivate', [CustomerController::class, 'deactivate'])
             ->name('customers.deactivate')
             ->middleware('permission:deactivate-customers');
+    });
+
+    // Lookup Management Routes
+    // OEM (Original Equipment Manufacturer) Management
+    Route::apiResource('oems', OemController::class);
+
+    // Product Management
+    Route::apiResource('products', ProductController::class);
+
+    // Asset Type Management  
+    Route::apiResource('types', TypeController::class);
+
+    // Tag Management
+    Route::apiResource('tags', TagController::class);
+    Route::prefix('tags')->group(function () {
+        Route::post('{tag}/assets', [TagController::class, 'attachToAssets'])
+            ->name('tags.attach-assets')
+            ->middleware('permission:edit-assets');
+        Route::delete('{tag}/assets', [TagController::class, 'detachFromAssets'])
+            ->name('tags.detach-assets')
+            ->middleware('permission:edit-assets');
+    });
+
+    // Location Management
+    Route::apiResource('locations', LocationController::class);
+    Route::prefix('locations')->group(function () {
+        Route::get('{location}/assets', [LocationController::class, 'assets'])
+            ->name('locations.assets')
+            ->middleware('permission:view-assets');
     });
 });
