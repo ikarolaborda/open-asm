@@ -353,13 +353,13 @@ class CustomerApiTest extends TestCase
         // Create older customer with explicit timestamp
         $older = Customer::factory()->create([
             'organization_id' => $this->organization->id,
-            'created_at' => now()->subMinute()
+            'created_at' => now()->subMinute(),
         ]);
-        
+
         // Create newer customer with current timestamp
         $newer = Customer::factory()->create([
             'organization_id' => $this->organization->id,
-            'created_at' => now()
+            'created_at' => now(),
         ]);
 
         $response = $this->getJson('/api/v1/customers?sort=-created_at', $this->getAuthHeaders($this->user));
