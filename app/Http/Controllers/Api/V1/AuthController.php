@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use OpenApi\Attributes as OA;
+use Illuminate\Support\Facades\Hash;
 
 #[OA\Tag(name: 'Authentication', description: 'JWT Authentication endpoints')]
 class AuthController extends Controller
@@ -235,6 +236,73 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out',
+        ]);
+    }
+
+    #[OA\Put(
+        path: '/api/v1/auth/password',
+        summary: 'Change user password',
+        tags: ['Authentication'],
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['current_password', 'password', 'password_confirmation'],
+                properties: [
+                    new OA\Property(property: 'current_password', type: 'string', description: 'Current password'),
+                    new OA\Property(property: 'password', type: 'string', description: 'New password'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', description: 'New password confirmation'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Password updated successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Password updated successfully.'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(ref: '#/components/schemas/ValidationError')
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(ref: '#/components/schemas/Error')
+            ),
+        ]
+    )]
+    public function changePassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        // Check if the current password is correct
+        if (! Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => [
+                    'current_password' => ['The current password is incorrect.'],
+                ],
+            ], 422);
+        }
+
+        // Update the password
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'message' => 'Password updated successfully.',
         ]);
     }
 }

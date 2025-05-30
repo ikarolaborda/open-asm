@@ -57,6 +57,14 @@ class Organization extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\OrganizationFactory::new();
+    }
+
+    /**
      * Get all users for this organization.
      */
     public function users(): HasMany

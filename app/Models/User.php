@@ -27,6 +27,11 @@ class User extends Authenticatable implements JWTSubject
     use SoftDeletes;
 
     /**
+     * The guard name for permissions.
+     */
+    protected $guard_name = 'api';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

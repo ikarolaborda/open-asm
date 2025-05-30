@@ -76,17 +76,17 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission, 'guard_name' => 'api']);
         }
 
         // Create roles and assign permissions
 
         // Super Admin Role - Can access everything across all organizations
-        $superAdminRole = Role::create(['name' => 'super-admin']);
+        $superAdminRole = Role::create(['name' => 'super-admin', 'guard_name' => 'api']);
         $superAdminRole->givePermissionTo(Permission::all());
 
         // Admin Role - Full access within their organization
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
         $adminRole->givePermissionTo([
             // Organization management (own org only)
             'view-organization',
@@ -140,7 +140,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // User Role - Limited access for asset operations
-        $userRole = Role::create(['name' => 'user']);
+        $userRole = Role::create(['name' => 'user', 'guard_name' => 'api']);
         $userRole->givePermissionTo([
             // Organization viewing only
             'view-organization',

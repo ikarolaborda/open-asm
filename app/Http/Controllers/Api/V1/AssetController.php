@@ -160,6 +160,10 @@ class AssetController extends Controller
 
         $includes = $request->get('include', []);
         if (! empty($includes)) {
+            // Convert comma-separated string to array if needed
+            if (is_string($includes)) {
+                $includes = explode(',', $includes);
+            }
             $asset->load($includes);
         }
 
@@ -623,6 +627,70 @@ class AssetController extends Controller
 
             return response()->json([
                 'message' => 'Failed to retrieve statistics.',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Attach tags to an asset.
+     */
+    public function attachTags(Request $request, Asset $asset): JsonResponse
+    {
+        $request->validate([
+            'tag_ids' => 'required|array',
+            'tag_ids.*' => 'exists:tags,id',
+        ]);
+
+        try {
+            $asset->tags()->attach($request->tag_ids);
+
+            $this->loggingService->logBusinessOperation('attach_tags', 'asset', $asset->id);
+
+            return response()->json([
+                'message' => 'Tags attached successfully.',
+            ]);
+        } catch (\Exception $e) {
+            $this->loggingService->error('Failed to attach tags to asset', [
+                'asset_id' => $asset->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to attach tags.',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Detach tags from an asset.
+     */
+    public function detachTags(Request $request, Asset $asset): JsonResponse
+    {
+        $request->validate([
+            'tag_ids' => 'required|array',
+            'tag_ids.*' => 'exists:tags,id',
+        ]);
+
+        try {
+            $asset->tags()->detach($request->tag_ids);
+
+            $this->loggingService->logBusinessOperation('detach_tags', 'asset', $asset->id);
+
+            return response()->json([
+                'message' => 'Tags detached successfully.',
+            ]);
+        } catch (\Exception $e) {
+            $this->loggingService->error('Failed to detach tags from asset', [
+                'asset_id' => $asset->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to detach tags.',
                 'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

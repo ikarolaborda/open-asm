@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Domain\Shared\Models;
 
 use App\Domain\Asset\Models\Asset;
-use App\Domain\Organization\Models\Organization;
+use App\Domain\Shared\Traits\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
@@ -18,6 +17,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tag extends Model
 {
+    use BelongsToOrganization;
     use HasFactory;
     use HasUuids;
     use LogsActivity;
@@ -26,6 +26,7 @@ class Tag extends Model
     protected $fillable = [
         'organization_id',
         'name',
+        'code',
         'color',
         'description',
         'is_active',
@@ -41,29 +42,11 @@ class Tag extends Model
     ];
 
     /**
-     * Boot the model.
+     * Create a new factory instance for the model.
      */
-    protected static function booted(): void
+    protected static function newFactory()
     {
-        static::addGlobalScope('organization', function (Builder $builder) {
-            if (auth()->check() && auth()->user()->organization_id) {
-                $builder->where('tags.organization_id', auth()->user()->organization_id);
-            }
-        });
-
-        static::creating(function (Tag $tag) {
-            if (! $tag->organization_id && auth()->check()) {
-                $tag->organization_id = auth()->user()->organization_id;
-            }
-        });
-    }
-
-    /**
-     * Get the organization that owns the tag.
-     */
-    public function organization(): BelongsTo
-    {
-        return $this->belongsTo(Organization::class);
+        return \Database\Factories\TagFactory::new();
     }
 
     /**

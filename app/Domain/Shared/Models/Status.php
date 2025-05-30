@@ -45,6 +45,14 @@ class Status extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\StatusFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void

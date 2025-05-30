@@ -54,6 +54,14 @@ class Location extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\LocationFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void

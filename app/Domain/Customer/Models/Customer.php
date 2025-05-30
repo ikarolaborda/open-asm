@@ -61,6 +61,14 @@ class Customer extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\CustomerFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void
@@ -239,6 +247,14 @@ class Customer extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to only include inactive customers.
+     */
+    public function scopeInactive(Builder $query): Builder
+    {
+        return $query->where('is_active', false);
     }
 
     /**

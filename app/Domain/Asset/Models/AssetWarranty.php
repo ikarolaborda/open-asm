@@ -49,6 +49,14 @@ class AssetWarranty extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\AssetWarrantyFactory::new();
+    }
+
+    /**
      * Get the asset this warranty belongs to.
      */
     public function asset(): BelongsTo

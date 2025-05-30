@@ -46,6 +46,14 @@ class Contact extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\ContactFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void

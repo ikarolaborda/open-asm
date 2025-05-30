@@ -71,6 +71,14 @@ class Asset extends Model
     ];
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\AssetFactory::new();
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void
@@ -245,21 +253,30 @@ class Asset extends Model
      */
     public function getWarrantyStatusAttribute(): string
     {
+        // First check if there's a currently active warranty
         $activeWarranty = $this->currentWarranty()->first();
 
-        if (! $activeWarranty) {
-            return 'no_warranty';
+        if ($activeWarranty) {
+            $daysUntilExpiry = now()->diffInDays($activeWarranty->end_date, false);
+
+            if ($daysUntilExpiry <= 30) {
+                return 'expiring_soon';
+            }
+
+            return 'active';
         }
 
-        $daysUntilExpiry = now()->diffInDays($activeWarranty->end_date, false);
+        // If no active warranty, check if there's an expired warranty
+        $expiredWarranty = $this->warranties()
+            ->where('is_active', true)
+            ->where('end_date', '<', now())
+            ->first();
 
-        if ($daysUntilExpiry < 0) {
+        if ($expiredWarranty) {
             return 'expired';
-        } elseif ($daysUntilExpiry <= 30) {
-            return 'expiring_soon';
         }
 
-        return 'active';
+        return 'no_warranty';
     }
 
     /**
