@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         php-version: [8.4]
@@ -46,7 +46,7 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Copy environment file
-      run: cp environment.example .env
+      run: cp .env.example .env
 
     - name: Generate application key
       run: php artisan key:generate
@@ -71,7 +71,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -103,4 +103,4 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Run Laravel Pint (Code Style Check)
-      run: ./vendor/bin/pint --test --verbose 
+      run: ./vendor/bin/pint --test --verbose
