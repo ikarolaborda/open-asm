@@ -25,6 +25,14 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
         coverage: xdebug
 
+    - name: Create Laravel directories
+      run: |
+        mkdir -p bootstrap/cache
+        mkdir -p storage/framework/{sessions,views,cache}
+        mkdir -p storage/logs
+        chmod -R 775 bootstrap/cache
+        chmod -R 775 storage
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v4
@@ -35,7 +43,7 @@ jobs:
           ${{ runner.os }}-php-${{ matrix.php-version }}-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Copy environment file
       run: cp environment.example .env
@@ -74,6 +82,14 @@ jobs:
         php-version: 8.4
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
 
+    - name: Create Laravel directories
+      run: |
+        mkdir -p bootstrap/cache
+        mkdir -p storage/framework/{sessions,views,cache}
+        mkdir -p storage/logs
+        chmod -R 775 bootstrap/cache
+        chmod -R 775 storage
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v4
@@ -84,7 +100,7 @@ jobs:
           ${{ runner.os }}-php-8.4-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Run Laravel Pint (Code Style Check)
       run: ./vendor/bin/pint --test --verbose 
