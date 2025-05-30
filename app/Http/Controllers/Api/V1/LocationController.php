@@ -16,10 +16,10 @@ class LocationController extends Controller
 {
     #[OA\Get(
         path: '/api/v1/locations',
-        summary: 'List all locations',
         description: 'Get a paginated list of all locations with optional filtering',
-        tags: ['Locations'],
+        summary: 'List all locations',
         security: [['bearerAuth' => []]],
+        tags: ['Locations'],
         parameters: [
             new OA\Parameter(
                 name: 'filter[name]',
@@ -84,13 +84,31 @@ class LocationController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        'data' => new OA\Property(
+                        new OA\Property(
+                            property: 'data',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Location')
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'id',      type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name',    type: 'string'),
+                                    new OA\Property(property: 'city',    type: 'string'),
+                                    new OA\Property(property: 'country', type: 'string'),
+                                ],
+                                type: 'object'
+                            )
                         ),
-                        'meta' => new OA\Property(ref: '#/components/schemas/PaginationMeta'),
-                        'links' => new OA\Property(ref: '#/components/schemas/PaginationLinks'),
-                    ]
+                        new OA\Property(
+                            property: 'meta',
+                            properties: [
+                                new OA\Property(property: 'current_page', type: 'integer'),
+                                new OA\Property(property: 'last_page',    type: 'integer'),
+                                new OA\Property(property: 'per_page',     type: 'integer'),
+                                new OA\Property(property: 'total',        type: 'integer'),
+                            ],
+                            type: 'object'
+                        ),
+                    ],
+                    type: 'object'
                 )
             ),
         ]
@@ -109,36 +127,45 @@ class LocationController extends Controller
 
     #[OA\Post(
         path: '/api/v1/locations',
-        summary: 'Create a new location',
         description: 'Create a new geographic location',
-        tags: ['Locations'],
+        summary: 'Create a new location',
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ['name'],
                 properties: [
-                    'name' => new OA\Property(type: 'string', description: 'Location name', example: 'New York Office'),
-                    'customer_id' => new OA\Property(type: 'string', format: 'uuid', description: 'Customer ID', example: '550e8400-e29b-41d4-a716-446655440000'),
-                    'code' => new OA\Property(type: 'string', description: 'Location code', example: 'NYC'),
-                    'description' => new OA\Property(type: 'string', description: 'Location description', example: 'Main office in Manhattan'),
-                    'address' => new OA\Property(type: 'string', description: 'Street address', example: '123 Broadway'),
-                    'city' => new OA\Property(type: 'string', description: 'City', example: 'New York'),
-                    'state' => new OA\Property(type: 'string', description: 'State/Province', example: 'NY'),
-                    'country' => new OA\Property(type: 'string', description: 'Country', example: 'USA'),
-                    'postal_code' => new OA\Property(type: 'string', description: 'Postal code', example: '10001'),
-                    'latitude' => new OA\Property(type: 'number', format: 'float', description: 'Latitude', example: 40.7128),
-                    'longitude' => new OA\Property(type: 'number', format: 'float', description: 'Longitude', example: -74.0060),
-                    'is_headquarters' => new OA\Property(type: 'boolean', description: 'Is headquarters', example: true),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
-                ]
+                    'name' => new OA\Property(property: 'name', description: 'Location name', type: 'string', example: 'New York Office'),
+                    'customer_id' => new OA\Property(property: 'customer_id', description: 'Customer ID', type: 'string', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000'),
+                    'code' => new OA\Property(property: 'code', description: 'Location code', type: 'string', example: 'NYC'),
+                    'description' => new OA\Property(property: 'description', description: 'Location description', type: 'string', example: 'Main office in Manhattan'),
+                    'address' => new OA\Property(property: 'address', description: 'Street address', type: 'string', example: '123 Broadway'),
+                    'city' => new OA\Property(property: 'city', description: 'City', type: 'string', example: 'New York'),
+                    'state' => new OA\Property(property: 'state', description: 'State/Province', type: 'string', example: 'NY'),
+                    'country' => new OA\Property(property: 'country', description: 'Country', type: 'string', example: 'USA'),
+                    'postal_code' => new OA\Property(property: 'postal_code', description: 'Postal code', type: 'string', example: '10001'),
+                    'latitude' => new OA\Property(property: 'latitude', description: 'Latitude', type: 'number', format: 'float', example: 40.7128),
+                    'longitude' => new OA\Property(property: 'longitude', description: 'Longitude', type: 'number', format: 'float', example: -74.0060),
+                    'is_headquarters' => new OA\Property(property: 'is_headquarters', description: 'Is headquarters', type: 'boolean', example: true),
+                    'is_active' => new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean', example: true),
+                ],
+                type: 'object'
             )
         ),
+        tags: ['Locations'],
         responses: [
             new OA\Response(
                 response: 201,
                 description: 'Location created successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Location')
+                content: new OA\JsonContent(
+                    properties: [
+                        'id' => new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        'name' => new OA\Property(property: 'name', type: 'string'),
+                        'city' => new OA\Property(property: 'city', type: 'string'),
+                        'country' => new OA\Property(property: 'country', type: 'string'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 422, description: 'Validation error'),
         ]
@@ -168,10 +195,10 @@ class LocationController extends Controller
 
     #[OA\Get(
         path: '/api/v1/locations/{id}',
-        summary: 'Get location details',
         description: 'Get details of a specific location',
-        tags: ['Locations'],
+        summary: 'Get location details',
         security: [['bearerAuth' => []]],
+        tags: ['Locations'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -192,7 +219,15 @@ class LocationController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Successful response',
-                content: new OA\JsonContent(ref: '#/components/schemas/Location')
+                content: new OA\JsonContent(
+                    properties: [
+                        'id' => new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        'name' => new OA\Property(property: 'name', type: 'string'),
+                        'city' => new OA\Property(property: 'city', type: 'string'),
+                        'country' => new OA\Property(property: 'country', type: 'string'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'Location not found'),
         ]
@@ -212,10 +247,32 @@ class LocationController extends Controller
 
     #[OA\Put(
         path: '/api/v1/locations/{id}',
-        summary: 'Update location',
         description: 'Update an existing location',
-        tags: ['Locations'],
+        summary: 'Update location',
         security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name'],
+                properties: [
+                    'name' => new OA\Property(property: 'name', description: 'Location name', type: 'string', example: 'New York Office'),
+                    'customer_id' => new OA\Property(property: 'customer_id', description: 'Customer ID', type: 'string', format: 'uuid'),
+                    'code' => new OA\Property(property: 'code', description: 'Location code', type: 'string', example: 'NYC'),
+                    'description' => new OA\Property(property: 'description', description: 'Location description', type: 'string'),
+                    'address' => new OA\Property(property: 'address', description: 'Street address', type: 'string'),
+                    'city' => new OA\Property(property: 'city', description: 'City', type: 'string'),
+                    'state' => new OA\Property(property: 'state', description: 'State/Province', type: 'string'),
+                    'country' => new OA\Property(property: 'country', description: 'Country', type: 'string'),
+                    'postal_code' => new OA\Property(property: 'postal_code', description: 'Postal code', type: 'string'),
+                    'latitude' => new OA\Property(property: 'latitude', description: 'Latitude', type: 'number', format: 'float'),
+                    'longitude' => new OA\Property(property: 'longitude', description: 'Longitude', type: 'number', format: 'float'),
+                    'is_headquarters' => new OA\Property(property: 'is_headquarters', description: 'Is headquarters', type: 'boolean'),
+                    'is_active' => new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean'),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['Locations'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -225,32 +282,19 @@ class LocationController extends Controller
                 schema: new OA\Schema(type: 'string', format: 'uuid')
             ),
         ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                required: ['name'],
-                properties: [
-                    'name' => new OA\Property(type: 'string', description: 'Location name', example: 'New York Office'),
-                    'customer_id' => new OA\Property(type: 'string', format: 'uuid', description: 'Customer ID', example: '550e8400-e29b-41d4-a716-446655440000'),
-                    'code' => new OA\Property(type: 'string', description: 'Location code', example: 'NYC'),
-                    'description' => new OA\Property(type: 'string', description: 'Location description', example: 'Main office in Manhattan'),
-                    'address' => new OA\Property(type: 'string', description: 'Street address', example: '123 Broadway'),
-                    'city' => new OA\Property(type: 'string', description: 'City', example: 'New York'),
-                    'state' => new OA\Property(type: 'string', description: 'State/Province', example: 'NY'),
-                    'country' => new OA\Property(type: 'string', description: 'Country', example: 'USA'),
-                    'postal_code' => new OA\Property(type: 'string', description: 'Postal code', example: '10001'),
-                    'latitude' => new OA\Property(type: 'number', format: 'float', description: 'Latitude', example: 40.7128),
-                    'longitude' => new OA\Property(type: 'number', format: 'float', description: 'Longitude', example: -74.0060),
-                    'is_headquarters' => new OA\Property(type: 'boolean', description: 'Is headquarters', example: true),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
-                ]
-            )
-        ),
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Location updated successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Location')
+                content: new OA\JsonContent(
+                    properties: [
+                        'id' => new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                        'name' => new OA\Property(property: 'name', type: 'string'),
+                        'city' => new OA\Property(property: 'city', type: 'string'),
+                        'country' => new OA\Property(property: 'country', type: 'string'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'Location not found'),
             new OA\Response(response: 422, description: 'Validation error'),
@@ -281,10 +325,10 @@ class LocationController extends Controller
 
     #[OA\Delete(
         path: '/api/v1/locations/{id}',
-        summary: 'Delete location',
         description: 'Delete a location (soft delete)',
-        tags: ['Locations'],
+        summary: 'Delete location',
         security: [['bearerAuth' => []]],
+        tags: ['Locations'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -308,10 +352,10 @@ class LocationController extends Controller
 
     #[OA\Get(
         path: '/api/v1/locations/{id}/assets',
-        summary: 'Get location assets',
         description: 'Get all assets at a specific location',
-        tags: ['Locations'],
+        summary: 'Get location assets',
         security: [['bearerAuth' => []]],
+        tags: ['Locations'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -328,12 +372,18 @@ class LocationController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         'data' => new OA\Property(
+                            property: 'data',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Asset')
+                            items: new OA\Items(
+                                properties: [
+                                    'id' => new OA\Property(property: 'id', type: 'string', format: 'uuid'),
+                                    'name' => new OA\Property(property: 'name', type: 'string'),
+                                ],
+                                type: 'object'
+                            )
                         ),
-                        'meta' => new OA\Property(ref: '#/components/schemas/PaginationMeta'),
-                        'links' => new OA\Property(ref: '#/components/schemas/PaginationLinks'),
-                    ]
+                    ],
+                    type: 'object'
                 )
             ),
             new OA\Response(response: 404, description: 'Location not found'),
@@ -346,4 +396,4 @@ class LocationController extends Controller
 
         return response()->json($assets);
     }
-} 
+}

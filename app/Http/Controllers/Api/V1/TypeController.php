@@ -16,10 +16,10 @@ class TypeController extends Controller
 {
     #[OA\Get(
         path: '/api/v1/types',
+        description: 'Get a paginated list of all asset types with optional filtering and inclusion of related assets',
         summary: 'List all asset types',
-        description: 'Get a paginated list of all asset types with optional filtering',
-        tags: ['Types'],
         security: [['bearerAuth' => []]],
+        tags: ['Types'],
         parameters: [
             new OA\Parameter(
                 name: 'filter[name]',
@@ -47,14 +47,31 @@ class TypeController extends Controller
                 description: 'Sort by field',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string', enum: ['name', 'category', 'created_at', '-name', '-category', '-created_at'])
+                schema: new OA\Schema(
+                    type: 'string',
+                    enum: ['name', 'category', 'created_at', '-name', '-category', '-created_at']
+                )
             ),
             new OA\Parameter(
                 name: 'include',
-                description: 'Include related resources',
+                description: 'Include related resources (comma-separated: assets)',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string', enum: ['assets'])
+                schema: new OA\Schema(type: 'string')
+            ),
+            new OA\Parameter(
+                name: 'page',
+                description: 'Page number',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer', default: 1)
+            ),
+            new OA\Parameter(
+                name: 'per_page',
+                description: 'Items per page',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer', default: 15)
             ),
         ],
         responses: [
@@ -63,13 +80,44 @@ class TypeController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        'data' => new OA\Property(
+                        // array of types
+                        new OA\Property(
+                            property: 'data',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Type')
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name',        type: 'string'),
+                                    new OA\Property(property: 'code',        type: 'string', nullable: true),
+                                    new OA\Property(property: 'description', type: 'string', nullable: true),
+                                    new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
+                                    new OA\Property(property: 'is_active',   type: 'boolean'),
+                                    new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                                ],
+                                type: 'object'
+                            )
                         ),
-                        'meta' => new OA\Property(ref: '#/components/schemas/PaginationMeta'),
-                        'links' => new OA\Property(ref: '#/components/schemas/PaginationLinks'),
-                    ]
+                        // pagination meta (existing schema)
+                        new OA\Property(
+                            property: 'meta',
+                            ref: '#/components/schemas/PaginationMeta'
+                        ),
+                        // inline pagination links
+                        new OA\Property(
+                            property: 'links',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
+                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'active', type: 'boolean'),
+                                ],
+                                type: 'object'
+                            )
+                        ),
+                    ],
+                    type: 'object'
                 )
             ),
         ]
@@ -88,28 +136,41 @@ class TypeController extends Controller
 
     #[OA\Post(
         path: '/api/v1/types',
-        summary: 'Create a new asset type',
         description: 'Create a new asset type for categorization',
-        tags: ['Types'],
+        summary: 'Create a new asset type',
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ['name'],
                 properties: [
-                    'name' => new OA\Property(type: 'string', description: 'Type name', example: 'Laptop'),
-                    'code' => new OA\Property(type: 'string', description: 'Type code', example: 'LAP'),
-                    'description' => new OA\Property(type: 'string', description: 'Type description', example: 'Portable computing devices'),
-                    'category' => new OA\Property(type: 'string', enum: ['hardware', 'software', 'service'], description: 'Type category', example: 'hardware'),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
-                ]
+                    new OA\Property(property: 'name', description: 'Type name', type: 'string', example: 'Laptop'),
+                    new OA\Property(property: 'code', description: 'Type code', type: 'string', example: 'LAP'),
+                    new OA\Property(property: 'description', description: 'Type description', type: 'string', example: 'Portable computing devices'),
+                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware','software','service'], example: 'hardware'),
+                    new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean', example: true),
+                ],
+                type: 'object'
             )
         ),
+        tags: ['Types'],
         responses: [
             new OA\Response(
                 response: 201,
                 description: 'Type created successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Type')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',        type: 'string'),
+                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
+                        new OA\Property(property: 'is_active',   type: 'boolean'),
+                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 422, description: 'Validation error'),
         ]
@@ -117,11 +178,11 @@ class TypeController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:50|unique:types,code,NULL,id,organization_id,' . auth()->user()->organization_id,
+            'name'        => 'required|string|max:255',
+            'code'        => 'nullable|string|max:50|unique:types,code,NULL,id,organization_id,' . auth()->user()->organization_id,
             'description' => 'nullable|string|max:1000',
-            'category' => 'nullable|string|in:hardware,software,service',
-            'is_active' => 'boolean',
+            'category'    => 'nullable|string|in:hardware,software,service',
+            'is_active'   => 'boolean',
         ]);
 
         $type = Type::create($validated);
@@ -131,10 +192,10 @@ class TypeController extends Controller
 
     #[OA\Get(
         path: '/api/v1/types/{id}',
-        summary: 'Get type details',
         description: 'Get details of a specific asset type',
-        tags: ['Types'],
+        summary: 'Get type details',
         security: [['bearerAuth' => []]],
+        tags: ['Types'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -145,26 +206,39 @@ class TypeController extends Controller
             ),
             new OA\Parameter(
                 name: 'include',
-                description: 'Include related resources',
+                description: 'Include related resources (assets)',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string', enum: ['assets'])
+                schema: new OA\Schema(type: 'string')
             ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Successful response',
-                content: new OA\JsonContent(ref: '#/components/schemas/Type')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',        type: 'string'),
+                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
+                        new OA\Property(property: 'is_active',   type: 'boolean'),
+                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'Type not found'),
         ]
     )]
     public function show(Request $request, Type $type): JsonResponse
     {
-        $includes = $request->get('include', '');
-        $allowedIncludes = ['assets'];
-        $includes = array_intersect(explode(',', $includes), $allowedIncludes);
+        $includes = array_intersect(
+            explode(',', $request->get('include', '')),
+            ['assets']
+        );
 
         if (!empty($includes)) {
             $type->load($includes);
@@ -175,10 +249,24 @@ class TypeController extends Controller
 
     #[OA\Put(
         path: '/api/v1/types/{id}',
-        summary: 'Update asset type',
         description: 'Update an existing asset type',
-        tags: ['Types'],
+        summary: 'Update asset type',
         security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name'],
+                properties: [
+                    new OA\Property(property: 'name', description: 'Type name', type: 'string', example: 'Laptop'),
+                    new OA\Property(property: 'code', description: 'Type code', type: 'string', example: 'LAP'),
+                    new OA\Property(property: 'description', description: 'Type description', type: 'string', example: 'Portable computing devices'),
+                    new OA\Property(property: 'category', description: 'Type category', type: 'string', enum: ['hardware','software','service'], example: 'hardware'),
+                    new OA\Property(property: 'is_active', description: 'Active status', type: 'boolean', example: true),
+                ],
+                type: 'object'
+            )
+        ),
+        tags: ['Types'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
@@ -188,24 +276,23 @@ class TypeController extends Controller
                 schema: new OA\Schema(type: 'string', format: 'uuid')
             ),
         ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                required: ['name'],
-                properties: [
-                    'name' => new OA\Property(type: 'string', description: 'Type name', example: 'Laptop'),
-                    'code' => new OA\Property(type: 'string', description: 'Type code', example: 'LAP'),
-                    'description' => new OA\Property(type: 'string', description: 'Type description', example: 'Portable computing devices'),
-                    'category' => new OA\Property(type: 'string', enum: ['hardware', 'software', 'service'], description: 'Type category', example: 'hardware'),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
-                ]
-            )
-        ),
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Type updated successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Type')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',          type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',        type: 'string'),
+                        new OA\Property(property: 'code',        type: 'string', nullable: true),
+                        new OA\Property(property: 'description', type: 'string', nullable: true),
+                        new OA\Property(property: 'category', type: 'string', enum: ['hardware','software','service'], nullable: true),
+                        new OA\Property(property: 'is_active',   type: 'boolean'),
+                        new OA\Property(property: 'created_at',  type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',  type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'Type not found'),
             new OA\Response(response: 422, description: 'Validation error'),
@@ -214,11 +301,11 @@ class TypeController extends Controller
     public function update(Request $request, Type $type): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:50|unique:types,code,' . $type->id . ',id,organization_id,' . auth()->user()->organization_id,
+            'name'        => 'required|string|max:255',
+            'code'        => 'nullable|string|max:50|unique:types,code,' . $type->id . ',id,organization_id,' . auth()->user()->organization_id,
             'description' => 'nullable|string|max:1000',
-            'category' => 'nullable|string|in:hardware,software,service',
-            'is_active' => 'boolean',
+            'category'    => 'nullable|string|in:hardware,software,service',
+            'is_active'   => 'boolean',
         ]);
 
         $type->update($validated);
@@ -228,10 +315,10 @@ class TypeController extends Controller
 
     #[OA\Delete(
         path: '/api/v1/types/{id}',
-        summary: 'Delete asset type',
         description: 'Delete an asset type (soft delete)',
-        tags: ['Types'],
+        summary: 'Delete asset type',
         security: [['bearerAuth' => []]],
+        tags: ['Types'],
         parameters: [
             new OA\Parameter(
                 name: 'id',

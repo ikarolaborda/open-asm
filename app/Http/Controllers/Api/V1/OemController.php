@@ -16,10 +16,10 @@ class OemController extends Controller
 {
     #[OA\Get(
         path: '/api/v1/oems',
-        summary: 'List all OEMs',
         description: 'Get a paginated list of all OEMs with optional filtering',
-        tags: ['OEMs'],
+        summary: 'List all OEMs',
         security: [['bearerAuth' => []]],
+        tags: ['OEMs'],
         parameters: [
             new OA\Parameter(
                 name: 'filter[name]',
@@ -40,7 +40,22 @@ class OemController extends Controller
                 description: 'Sort by field',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string', enum: ['name', 'created_at', '-name', '-created_at'])
+                schema: new OA\Schema(
+                    type: 'string',
+                    enum: ['name', 'created_at', '-name', '-created_at']
+                )
+            ),
+            new OA\Parameter(
+                name: 'page',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer', default: 1)
+            ),
+            new OA\Parameter(
+                name: 'per_page',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'integer', default: 15)
             ),
         ],
         responses: [
@@ -49,13 +64,41 @@ class OemController extends Controller
                 description: 'Successful response',
                 content: new OA\JsonContent(
                     properties: [
-                        'data' => new OA\Property(
+                        new OA\Property(
+                            property: 'data',
                             type: 'array',
-                            items: new OA\Items(ref: '#/components/schemas/Oem')
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
+                                    new OA\Property(property: 'name',          type: 'string'),
+                                    new OA\Property(property: 'description',   type: 'string', nullable: true),
+                                    new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                                    new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
+                                    new OA\Property(property: 'is_active',     type: 'boolean'),
+                                    new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
+                                    new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                                ],
+                                type: 'object'
+                            )
                         ),
-                        'meta' => new OA\Property(ref: '#/components/schemas/PaginationMeta'),
-                        'links' => new OA\Property(ref: '#/components/schemas/PaginationLinks'),
-                    ]
+                        new OA\Property(
+                            property: 'meta',
+                            ref: '#/components/schemas/PaginationMeta'
+                        ),
+                        new OA\Property(
+                            property: 'links',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'url',    type: 'string', nullable: true),
+                                    new OA\Property(property: 'label',  type: 'string'),
+                                    new OA\Property(property: 'active', type: 'boolean'),
+                                ],
+                                type: 'object'
+                            )
+                        ),
+                    ],
+                    type: 'object'
                 )
             ),
         ]
@@ -73,28 +116,67 @@ class OemController extends Controller
 
     #[OA\Post(
         path: '/api/v1/oems',
-        summary: 'Create a new OEM',
         description: 'Create a new Original Equipment Manufacturer',
-        tags: ['OEMs'],
+        summary: 'Create a new OEM',
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ['name'],
                 properties: [
-                    'name' => new OA\Property(type: 'string', description: 'OEM name', example: 'Dell Technologies'),
-                    'description' => new OA\Property(type: 'string', description: 'OEM description', example: 'Computer technology company'),
-                    'website' => new OA\Property(type: 'string', format: 'url', description: 'OEM website', example: 'https://www.dell.com'),
-                    'contact_email' => new OA\Property(type: 'string', format: 'email', description: 'Contact email', example: 'support@dell.com'),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
+                    new OA\Property(
+                        property: 'name',
+                        description: 'OEM name',
+                        type: 'string',
+                        example: 'Dell Technologies'
+                    ),
+                    new OA\Property(
+                        property: 'description',
+                        description: 'OEM description',
+                        type: 'string',
+                        example: 'Computer technology company'
+                    ),
+                    new OA\Property(
+                        property: 'website',
+                        description: 'OEM website',
+                        type: 'string',
+                        format: 'url',
+                        example: 'https://www.dell.com'
+                    ),
+                    new OA\Property(
+                        property: 'contact_email',
+                        description: 'Contact email',
+                        type: 'string',
+                        format: 'email',
+                        example: 'support@dell.com'
+                    ),
+                    new OA\Property(
+                        property: 'is_active',
+                        description: 'Active status',
+                        type: 'boolean',
+                        example: true
+                    ),
                 ]
             )
         ),
+        tags: ['OEMs'],
         responses: [
             new OA\Response(
                 response: 201,
                 description: 'OEM created successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Oem')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',          type: 'string'),
+                        new OA\Property(property: 'description',   type: 'string', nullable: true),
+                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
+                        new OA\Property(property: 'is_active',     type: 'boolean'),
+                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 422, description: 'Validation error'),
         ]
@@ -102,11 +184,11 @@ class OemController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:oems,name',
-            'description' => 'nullable|string|max:1000',
-            'website' => 'nullable|url|max:255',
+            'name'          => 'required|string|max:255|unique:oems,name',
+            'description'   => 'nullable|string|max:1000',
+            'website'       => 'nullable|url|max:255',
             'contact_email' => 'nullable|email|max:255',
-            'is_active' => 'boolean',
+            'is_active'     => 'boolean',
         ]);
 
         $oem = Oem::create($validated);
@@ -116,14 +198,13 @@ class OemController extends Controller
 
     #[OA\Get(
         path: '/api/v1/oems/{id}',
-        summary: 'Get OEM details',
         description: 'Get details of a specific OEM',
-        tags: ['OEMs'],
+        summary: 'Get OEM details',
         security: [['bearerAuth' => []]],
+        tags: ['OEMs'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
-                description: 'OEM ID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -133,7 +214,19 @@ class OemController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Successful response',
-                content: new OA\JsonContent(ref: '#/components/schemas/Oem')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',          type: 'string'),
+                        new OA\Property(property: 'description',   type: 'string', nullable: true),
+                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
+                        new OA\Property(property: 'is_active',     type: 'boolean'),
+                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'OEM not found'),
         ]
@@ -145,37 +238,75 @@ class OemController extends Controller
 
     #[OA\Put(
         path: '/api/v1/oems/{id}',
-        summary: 'Update OEM',
         description: 'Update an existing OEM',
-        tags: ['OEMs'],
+        summary: 'Update OEM',
         security: [['bearerAuth' => []]],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                description: 'OEM ID',
-                in: 'path',
-                required: true,
-                schema: new OA\Schema(type: 'string', format: 'uuid')
-            ),
-        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
                 required: ['name'],
                 properties: [
-                    'name' => new OA\Property(type: 'string', description: 'OEM name', example: 'Dell Technologies'),
-                    'description' => new OA\Property(type: 'string', description: 'OEM description', example: 'Computer technology company'),
-                    'website' => new OA\Property(type: 'string', format: 'url', description: 'OEM website', example: 'https://www.dell.com'),
-                    'contact_email' => new OA\Property(type: 'string', format: 'email', description: 'Contact email', example: 'support@dell.com'),
-                    'is_active' => new OA\Property(type: 'boolean', description: 'Active status', example: true),
+                    new OA\Property(
+                        property: 'name',
+                        description: 'OEM name',
+                        type: 'string',
+                        example: 'Dell Technologies'
+                    ),
+                    new OA\Property(
+                        property: 'description',
+                        description: 'OEM description',
+                        type: 'string',
+                        example: 'Computer technology company'
+                    ),
+                    new OA\Property(
+                        property: 'website',
+                        description: 'OEM website',
+                        type: 'string',
+                        format: 'url',
+                        example: 'https://www.dell.com'
+                    ),
+                    new OA\Property(
+                        property: 'contact_email',
+                        description: 'Contact email',
+                        type: 'string',
+                        format: 'email',
+                        example: 'support@dell.com'
+                    ),
+                    new OA\Property(
+                        property: 'is_active',
+                        description: 'Active status',
+                        type: 'boolean',
+                        example: true
+                    ),
                 ]
             )
         ),
+        tags: ['OEMs'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'OEM updated successfully',
-                content: new OA\JsonContent(ref: '#/components/schemas/Oem')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'id',            type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'name',          type: 'string'),
+                        new OA\Property(property: 'description',   type: 'string', nullable: true),
+                        new OA\Property(property: 'website',       type: 'string', format: 'url', nullable: true),
+                        new OA\Property(property: 'contact_email', type: 'string', format: 'email', nullable: true),
+                        new OA\Property(property: 'is_active',     type: 'boolean'),
+                        new OA\Property(property: 'created_at',    type: 'string', format: 'date-time'),
+                        new OA\Property(property: 'updated_at',    type: 'string', format: 'date-time'),
+                    ],
+                    type: 'object'
+                )
             ),
             new OA\Response(response: 404, description: 'OEM not found'),
             new OA\Response(response: 422, description: 'Validation error'),
@@ -184,11 +315,11 @@ class OemController extends Controller
     public function update(Request $request, Oem $oem): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:oems,name,' . $oem->id,
-            'description' => 'nullable|string|max:1000',
-            'website' => 'nullable|url|max:255',
+            'name'          => 'required|string|max:255|unique:oems,name,' . $oem->id,
+            'description'   => 'nullable|string|max:1000',
+            'website'       => 'nullable|url|max:255',
             'contact_email' => 'nullable|email|max:255',
-            'is_active' => 'boolean',
+            'is_active'     => 'boolean',
         ]);
 
         $oem->update($validated);
@@ -198,14 +329,13 @@ class OemController extends Controller
 
     #[OA\Delete(
         path: '/api/v1/oems/{id}',
-        summary: 'Delete OEM',
         description: 'Delete an OEM (soft delete)',
-        tags: ['OEMs'],
+        summary: 'Delete OEM',
         security: [['bearerAuth' => []]],
+        tags: ['OEMs'],
         parameters: [
             new OA\Parameter(
                 name: 'id',
-                description: 'OEM ID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -222,4 +352,4 @@ class OemController extends Controller
 
         return response()->json(null, 204);
     }
-} 
+}
