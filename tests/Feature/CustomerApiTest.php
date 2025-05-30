@@ -350,8 +350,17 @@ class CustomerApiTest extends TestCase
 
     public function test_can_sort_customers_by_created_date_descending()
     {
-        $older = Customer::factory()->create(['organization_id' => $this->organization->id]);
-        $newer = Customer::factory()->create(['organization_id' => $this->organization->id]);
+        // Create older customer with explicit timestamp
+        $older = Customer::factory()->create([
+            'organization_id' => $this->organization->id,
+            'created_at' => now()->subMinute()
+        ]);
+        
+        // Create newer customer with current timestamp
+        $newer = Customer::factory()->create([
+            'organization_id' => $this->organization->id,
+            'created_at' => now()
+        ]);
 
         $response = $this->getJson('/api/v1/customers?sort=-created_at', $this->getAuthHeaders($this->user));
 
